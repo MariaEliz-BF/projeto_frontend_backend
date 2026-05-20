@@ -47,6 +47,7 @@ def substituir_doce(db: Session, doce_id: int, doce: DoceCreate):
 
 #//funções para pedidos
 def criar_pedido(db: Session, pedido: PedidoCreate):
+    
     db_pedido = Pedido(cliente=pedido.cliente, valor_total=pedido.valor_total, data=pedido.data)
     db.add(db_pedido)
     db.commit()
