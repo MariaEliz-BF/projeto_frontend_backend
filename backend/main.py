@@ -44,16 +44,6 @@ def criar_doce(doce: DoceCreate, db: Session = Depends(get_db)):
 
     return novo_doce
 
-@app.patch("/doces/{doce_id}", response_model=DoceResponse)
-def atualizar_doce(doce_id: int, doce: DoceCreate, db: Session = Depends(get_db)):
-    doce_atualizado = db.query(Doce).filter(Doce.id == doce_id).first()
-    if doce_atualizado:
-        doce_atualizado.nome = doce.nome
-        doce_atualizado.preco = doce.preco
-        doce_atualizado.quantidade = doce.quantidade
-        db.commit()
-        db.refresh(doce_atualizado)
-    return doce_atualizado
 
 @app.delete("/doces/{doce_id}")
 def deletar_doce(doce_id: int, db: Session = Depends(get_db)):
@@ -105,15 +95,7 @@ def deletar_pedido(pedido_id: int, db: Session = Depends(get_db)):
         db.commit()
     return {"mensagem": f"Pedido {pedido_id} deletado"}
 
-@app.patch("/pedidos/{pedido_id}")
-def atualizar_pedido(pedido_id: int, pedido: PedidoCreate, db: Session = Depends(get_db)):
-    pedido_atualizado = db.query(Pedido).filter(Pedido.id == pedido_id).first()
-    if pedido_atualizado:
-        pedido_atualizado.cliente = pedido.cliente
-        pedido_atualizado.data = pedido.data
-        db.commit()
-        db.refresh(pedido_atualizado)
-    return pedido_atualizado
+
 
 @app.put("/pedidos/{pedido_id}/substituir", response_model=PedidoResponse)
 def substituir_pedido(pedido_id: int, pedido: PedidoCreate, db: Session = Depends(get_db)):
