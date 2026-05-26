@@ -88,4 +88,3 @@ def substituir_pedido(db: Session, pedido_id: int, pedido: PedidoCreate):
     db.commit()
     db.refresh(db_pedido)
     return db_pedido
-
