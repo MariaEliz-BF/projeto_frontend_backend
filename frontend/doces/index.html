@@ -12,57 +12,49 @@
 
 <body>
 
-   <nav class="navbar navbar-expand-lg">
-    <div class="container position-relative">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container position-relative">
 
-        <button class="navbar-toggler menu-button-left" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+            <button class="navbar-toggler menu-button-left" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <a class="navbar-brand navbar-brand-center" href="index.html">
-            Doceria
-        </a>
+            <a class="navbar-brand navbar-brand-center" href="index.html">
+                Doceria
+            </a>
 
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="menuLateral">
-            <div class="offcanvas-header">
-                <h5 class="titulo-menu">Menu</h5>
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="menuLateral">
+                <div class="offcanvas-header">
+                    <h5 class="titulo-menu">Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                </div>
 
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="../doces/index.html">Doces</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="../pedidos/index.html">Pedidos</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
-            <div class="offcanvas-body">
-                <ul class="navbar-nav">
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="../doces/index.html">
-                            Doces
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="../pedidos/index.html">
-                            Pedidos
-                        </a>
-                    </li>
-
-                </ul>
-            </div>
         </div>
+    </nav>
 
-    </div>
-</nav>
     <div class="container mt-5">
 
         <div class="card-custom">
 
             <div class="d-flex justify-content-between align-items-center mb-4">
-
                 <h1 class="titulo">Lista de Doces</h1>
 
                 <a href="criar.html" class="btn btn-custom">
                     Novo Doce
                 </a>
-
             </div>
 
             <div id="mensagem"></div>
@@ -107,19 +99,30 @@
 
                 tabela.innerHTML = ""
 
+                if (doces.length === 0) {
+                    tabela.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                Nenhum doce cadastrado.
+                            </td>
+                        </tr>
+                    `
+                    return
+                }
+
                 doces.forEach(doce => {
                     tabela.innerHTML += `
                         <tr>
                             <td>${doce.id}</td>
                             <td>${doce.nome}</td>
-                            <td>R$ ${doce.preco}</td>
+                            <td>R$ ${Number(doce.preco).toFixed(2)}</td>
                             <td>${doce.quantidade}</td>
                             <td>
                                 <a href="editar.html?id=${doce.id}" class="btn btn-warning btn-sm">
                                     Editar
                                 </a>
 
-                                <button class="btn btn-danger btn-sm">
+                                <button class="btn btn-danger btn-sm" onclick="excluirDoce(${doce.id})">
                                     Excluir
                                 </button>
                             </td>
@@ -130,7 +133,42 @@
             } catch (erro) {
                 mensagem.innerHTML = `
                     <div class="alert alert-danger">
-                        Não foi possível carregar os doces.
+                        Não foi possível carregar os doces. Verifique se o backend está rodando.
+                    </div>
+                `
+            }
+        }
+
+        async function excluirDoce(id) {
+            const mensagem = document.getElementById("mensagem")
+
+            const confirmar = confirm("Tem certeza que deseja excluir este doce?")
+
+            if (!confirmar) {
+                return
+            }
+
+            try {
+                const resposta = await fetch(`http://127.0.0.1:8000/doces/${id}`, {
+                    method: "DELETE"
+                })
+
+                if (!resposta.ok) {
+                    throw new Error("Erro ao excluir doce")
+                }
+
+                mensagem.innerHTML = `
+                    <div class="alert alert-success">
+                        Doce excluído com sucesso!
+                    </div>
+                `
+
+                carregarDoces()
+
+            } catch (erro) {
+                mensagem.innerHTML = `
+                    <div class="alert alert-danger">
+                        Não foi possível excluir o doce.
                     </div>
                 `
             }
