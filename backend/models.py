@@ -17,6 +17,10 @@ class Pedido(Base):
     cliente = Column(String)
     valor_total = Column(Float)
     data = Column(String)
+    itens = relationship(
+    "ItemPedido",
+    back_populates="pedido"
+)
 
 class ItemPedido(Base):
     __tablename__ = "itens_pedido"
@@ -30,4 +34,5 @@ class ItemPedido(Base):
 
     pedido = relationship("Pedido")
     doce = relationship("Doce")
+    pedido = relationship("Pedido", back_populates="itens")
 

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from models import Doce, Pedido, ItemPedido
-from schemas import TarefaCreate, TarefaUpdate
+from schemas import DoceUpdate, DoceCreate, PedidoCreate, PedidoUpdate
 
 from fastapi import HTTPException
 
