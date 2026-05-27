@@ -3,3 +3,11 @@ __pycache__/
 *.pyc
 *.db
 .vscode/
+__pycache__/
+*.pyc
+banco.db
+.env
+venv/
+.venv/
+.idea/
+.vscode/
