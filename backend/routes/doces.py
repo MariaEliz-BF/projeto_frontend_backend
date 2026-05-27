@@ -11,8 +11,11 @@ router = APIRouter(
 )
 #//buscar e buscar por id
 @router.get("/", response_model=list[DoceResponse])
-def listar_doces(): 
-    return {"doces": "Lista de doces"}
+def listar_doces(db: Session = Depends(get_db)):
+
+    doces = db.query(Doce).all()
+
+    return doces
 
 @router.get("/{doce_id}",response_model=DoceResponse)
 def listar_doces_id(doce_id: int):

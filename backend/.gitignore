@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+
+banco.db
+
+.env
+
+venv/
+.venv/
+
+.idea/
+.vscode/
