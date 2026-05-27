@@ -38,7 +38,10 @@ def listar_pedido_id(
 
 #//restante das operações para pedidos
 @router.post("/", response_model=PedidoResponse)
-def criar_pedido(pedido: PedidoCreate, db: Session = Depends(get_db)):
+def criar_pedido(
+    pedido: PedidoCreate,
+    db: Session = Depends(get_db)
+):
 
     valor_total = 0
 
@@ -49,6 +52,7 @@ def criar_pedido(pedido: PedidoCreate, db: Session = Depends(get_db)):
     )
 
     db.add(novo_pedido)
+
     db.commit()
     db.refresh(novo_pedido)
 
@@ -69,6 +73,28 @@ def criar_pedido(pedido: PedidoCreate, db: Session = Depends(get_db)):
                 status_code=400,
                 detail=f"Estoque insuficiente para {doce.nome}"
             )
+
+        subtotal = doce.preco * item.quantidade
+
+        valor_total += subtotal
+
+        doce.quantidade -= item.quantidade
+
+        item_pedido = ItemPedido(
+            pedido_id=novo_pedido.id,
+            doce_id=item.doce_id,
+            quantidade=item.quantidade
+        )
+
+        db.add(item_pedido)
+
+    novo_pedido.valor_total = valor_total
+
+    db.commit()
+
+    db.refresh(novo_pedido)
+
+    return novo_pedido
 
 
 @router.delete("/{pedido_id}")
