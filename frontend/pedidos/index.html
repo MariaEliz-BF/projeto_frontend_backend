@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doceria - Lista de Pedidos</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container position-relative">
+
+            <button class="navbar-toggler menu-button-left" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand navbar-brand-center" href="../doces/index.html">
+                Doceria
+            </a>
+
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="menuLateral">
+                <div class="offcanvas-header">
+                    <h5 class="titulo-menu">Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                </div>
+
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="../doces/index.html">Doces</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="../pedidos/index.html">Pedidos</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+
+        <div class="card-custom">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="titulo">Lista de Pedidos</h1>
+
+                <a href="criar.html" class="btn btn-custom">
+                    Novo Pedido
+                </a>
+            </div>
+
+            <div id="mensagem"></div>
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Valor Total</th>
+                            <th>Data</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tabela-pedidos"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        async function carregarPedidos() {
+            const tabela = document.getElementById("tabela-pedidos")
+            const mensagem = document.getElementById("mensagem")
+
+            try {
+                const resposta = await fetch("http://127.0.0.1:8000/pedidos")
+
+                if (!resposta.ok) {
+                    throw new Error("Erro ao carregar pedidos")
+                }
+
+                const pedidos = await resposta.json()
+
+                tabela.innerHTML = ""
+
+                if (pedidos.length === 0) {
+                    tabela.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                Nenhum pedido cadastrado.
+                            </td>
+                        </tr>
+                    `
+                    return
+                }
+
+                pedidos.forEach(pedido => {
+                    tabela.innerHTML += `
+                        <tr>
+                            <td>${pedido.id}</td>
+                            <td>${pedido.cliente}</td>
+                            <td>R$ ${Number(pedido.valor_total).toFixed(2)}</td>
+                            <td>${pedido.data}</td>
+                            <td>
+                                <a href="editar.html?id=${pedido.id}" class="btn btn-warning btn-sm">
+                                    Editar
+                                </a>
+
+                                <button class="btn btn-danger btn-sm" onclick="excluirPedido(${pedido.id})">
+                                    Excluir
+                                </button>
+                            </td>
+                        </tr>
+                    `
+                })
+
+            } catch (erro) {
+                mensagem.innerHTML = `
+                    <div class="alert alert-danger">
+                        Não foi possível carregar os pedidos. Verifique se o backend está rodando.
+                    </div>
+                `
+            }
+        }
+
+        async function excluirPedido(id) {
+            const mensagem = document.getElementById("mensagem")
+
+            const confirmar = confirm("Tem certeza que deseja excluir este pedido?")
+
+            if (!confirmar) {
+                return
+            }
+
+            try {
+                const resposta = await fetch(`http://127.0.0.1:8000/pedidos/${id}`, {
+                    method: "DELETE"
+                })
+
+                if (!resposta.ok) {
+                    throw new Error("Erro ao excluir pedido")
+                }
+
+                mensagem.innerHTML = `
+                    <div class="alert alert-success">
+                        Pedido excluído com sucesso!
+                    </div>
+                `
+
+                carregarPedidos()
+
+            } catch (erro) {
+                mensagem.innerHTML = `
+                    <div class="alert alert-danger">
+                        Não foi possível excluir o pedido.
+                    </div>
+                `
+            }
+        }
+
+        carregarPedidos()
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
