@@ -15,7 +15,7 @@ body {
 
 .navbar-brand {
     font-family: 'Dancing Script', cursive;
-    font-size: 2.2rem;
+    font-size: 2.5rem;
     font-weight: 700;
     color: #7b3b11;
 }
@@ -24,85 +24,23 @@ body {
     color: #5c2b0d;
 }
 
-.nav-link {
-    color: #7b3b11;
-    font-weight: 500;
-}
-
-.nav-link:hover {
-    color: #5c2b0d;
-}
-
 /* TÍTULOS */
 
 .titulo {
     font-family: 'Dancing Script', cursive;
     color: #7b3b11;
-    font-size: 3rem;
+    font-size: 3.2rem;
     font-weight: 700;
 }
 
-/* CARDS */
+/* CARD */
 
 .card-custom {
     background-color: #ffffff;
     border: none;
     border-radius: 20px;
-    padding: 25px;
+    padding: 28px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-/* BOTÕES */
-
-.btn-custom {
-    background-color: #f4d4d4;
-    color: #7b3b11;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 18px;
-    font-weight: 700;
-}
-
-.btn-custom:hover {
-    background-color: #e8c2c2;
-    color: #7b3b11;
-}
-
-.btn-warning {
-    background-color: #f4d4d4;
-    border: none;
-    color: #7b3b11;
-}
-
-.btn-warning:hover {
-    background-color: #e8c2c2;
-    color: #7b3b11;
-}
-
-.btn-danger {
-    background-color: #7b3b11;
-    border: none;
-}
-
-.btn-danger:hover {
-    background-color: #5c2b0d;
-}
-
-/* TABELA */
-
-.table {
-    overflow: hidden;
-    border-radius: 12px;
-}
-
-.table thead th {
-    background-color: #f4d4d4;
-    color: #7b3b11;
-}
-
-.table td,
-.table th {
-    vertical-align: middle;
 }
 
 /* FORMULÁRIOS */
@@ -117,43 +55,39 @@ body {
     box-shadow: 0 0 0 0.2rem rgba(244, 212, 212, 0.4);
 }
 
-/* MENU LATERAL */
+.form-check-input:checked {
+    background-color: #7b3b11;
+    border-color: #7b3b11;
+}
 
-.offcanvas {
+/* BOTÃO PRINCIPAL */
+
+.btn-custom {
     background-color: #f4d4d4;
-    width: 250px;
-}
-
-.titulo-menu {
-    font-family: 'Dancing Script', cursive;
-    font-size: 2.3rem;
     color: #7b3b11;
-    margin: 0;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-weight: 700;
 }
 
-.offcanvas .nav-link {
+.btn-custom:hover {
+    background-color: #e8c2c2;
+    color: #7b3b11;
+}
+
+/* PRODUTOS */
+
+.produto-item {
+    background-color: #fff7f7;
+    border: 1px solid #f4d4d4;
+    border-radius: 14px;
+}
+
+/* TOTAL */
+
+.total-box {
+    background-color: #f4d4d4;
     color: #7b3b11;
     font-size: 1.1rem;
-    padding: 12px 10px;
-    border-radius: 10px;
-}
-
-.offcanvas .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.45);
-    color: #5c2b0d;
-}
-
-.navbar-toggler {
-    border: 2px solid #7b3b11;
-    border-radius: 10px;
-    padding: 6px 10px;
-}
-.form-select {
-    border: 1px solid #d8d8d8;
-    border-radius: 10px;
-}
-
-.form-select:focus {
-    border-color: #f4d4d4;
-    box-shadow: 0 0 0 0.2rem rgba(244, 212, 212, 0.4);
 }
