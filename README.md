@@ -90,7 +90,7 @@ projeto_frontend_backend/
  1. Clonar o repositório
 
 ```bash
-git clone URL_DO_REPOSITORIO
+git clone [URL_DO_REPOSITORIO](https://github.com/MariaEliz-BF/projeto_frontend_backend.git)
 ```
 
 ---
