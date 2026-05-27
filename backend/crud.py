@@ -1,6 +1,9 @@
 from sqlalchemy.orm import Session
-from models import Doce, Pedido
-from schemas import TarefaCreate, TarefaUpdate
+from models import Doce, Pedido, ItemPedido
+from schemas import DoceUpdate, DoceCreate, PedidoCreate, PedidoUpdate
+
+from fastapi import HTTPException
+
 #//funções para doces
 def criar_doce(db: Session, doce: DoceCreate):
     db_doce = Doce(nome=doce.nome, preco=doce.preco, quantidade=doce.quantidade)
@@ -47,12 +50,51 @@ def substituir_doce(db: Session, doce_id: int, doce: DoceCreate):
 
 #//funções para pedidos
 def criar_pedido(db: Session, pedido: PedidoCreate):
-    db_pedido = Pedido(cliente=pedido.cliente, valor_total=pedido.valor_total, data=pedido.data)
-    db.add(db_pedido)
-    db.commit()
-    db.refresh(db_pedido)
-    return db_pedido
 
+    valor_total = 0
+
+    novo_pedido = Pedido(
+        cliente=pedido.cliente,
+        valor_total=0,
+        data=pedido.data
+    )
+
+    db.add(novo_pedido)
+    db.commit()
+    db.refresh(novo_pedido)
+
+    for item in pedido.itens:
+
+        doce = db.query(Doce).filter(
+            Doce.id == item.doce_id
+        ).first()
+
+        if doce.quantidade < item.quantidade:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Estoque insuficiente para o doce {doce.nome}"
+            )
+
+        doce.quantidade -= item.quantidade
+
+        subtotal = doce.preco * item.quantidade
+
+        valor_total += subtotal
+
+        item_pedido = ItemPedido(
+            pedido_id=novo_pedido.id,
+            doce_id=doce.id,
+            quantidade=item.quantidade
+        )
+
+        db.add(item_pedido)
+
+    novo_pedido.valor_total = valor_total
+
+    db.commit()
+    db.refresh(novo_pedido)
+
+    return novo_pedido
 def listar_Pedido_Id(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Pedido).offset(skip).limit(limit).all()
 

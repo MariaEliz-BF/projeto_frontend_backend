@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-
+from fastapi import HTTPException
 from database import get_db
 from models import Doce
-from schemas import DoceCreate, DoceResponse
+from schemas import DoceCreate, DoceResponse, DoceUpdate
 
 router = APIRouter(
     prefix="/doces",
@@ -11,12 +11,30 @@ router = APIRouter(
 )
 #//buscar e buscar por id
 @router.get("/", response_model=list[DoceResponse])
-def listar_doces(): 
-    return {"doces": "Lista de doces"}
+def listar_doces(db: Session = Depends(get_db)):
 
-@router.get("/{doce_id}",response_model=DoceResponse)
-def listar_doces_id(doce_id: int):
-    return {"doce": f"Detalhes do doce {doce_id}"}
+    doces = db.query(Doce).all()
+
+    return doces
+
+@router.get("/{doce_id}", response_model=DoceResponse)
+def listar_doces_id(
+    doce_id: int,
+    db: Session = Depends(get_db)
+):
+
+    doce = db.query(Doce).filter(
+        Doce.id == doce_id
+    ).first()
+
+    if doce is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Doce não encontrado"
+        )
+
+    return doce
+
 #//restante operações para doces
 @router.post("/", response_model=DoceResponse)
 def criar_doce(doce: DoceCreate, db: Session = Depends(get_db)):
@@ -33,14 +51,60 @@ def criar_doce(doce: DoceCreate, db: Session = Depends(get_db)):
 
     return novo_doce
 
-@router.patch("/{doce_id}", response_model=DoceResponse)
-def atualizar_doce(doce_id: int, doce: DoceCreate):
-    return {"mensagem": f"Doce {doce_id} atualizado"}   
+@router.patch("/{doce_id}", response_model=DoceUpdate)
+def atualizar_doce(
+    doce_id: int,
+    doce: DoceUpdate,
+    db: Session = Depends(get_db)
+):
+
+    doce_db = db.query(Doce).filter(
+        Doce.id == doce_id
+    ).first()
+
+    if doce_db is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Doce não encontrado"
+        )
+
+    if doce.nome is not None:
+        doce_db.nome = doce.nome
+
+    if doce.preco is not None:
+        doce_db.preco = doce.preco
+
+    if doce.quantidade is not None:
+        doce_db.quantidade = doce.quantidade
+
+    db.commit()
+    db.refresh(doce_db)
+
+    return doce_db
 
 @router.delete("/{doce_id}")
-def deletar_doce(doce_id: int):
+def deletar_doce(doce_id: int, db: Session = Depends(get_db)):
+    doce = db.query(Doce).filter(Doce.id == doce_id).first()
+    if doce is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Doce não encontrado"
+        )
+    db.delete(doce)
+    db.commit()
     return {"mensagem": f"Doce {doce_id} deletado"}
 
 @router.put("/{doce_id}/substituir", response_model=DoceResponse)
-def substituir_doce(doce_id: int, doce: DoceCreate):
-    return {"mensagem": f"Doce {doce_id} substituído"}
+def substituir_doce(doce_id: int, doce: DoceCreate, db: Session = Depends(get_db)):
+    doce_db = db.query(Doce).filter(Doce.id == doce_id).first()
+    if doce_db is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Doce não encontrado"
+        )
+    doce_db.nome = doce.nome
+    doce_db.preco = doce.preco
+    doce_db.quantidade = doce.quantidade
+    db.commit()
+    db.refresh(doce_db)
+    return doce_db
