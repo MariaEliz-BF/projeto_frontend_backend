@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doceria - Doces</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="container justify-content-center">
+            <a class="navbar-brand" href="../index.html">Doceria</a>
+        </div>
+    </nav>
+
+    <main class="container mt-5">
+
+        <div class="card-custom">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="titulo mb-0">Doces</h1>
+                    <p class="mb-0">Gerencie os produtos cadastrados.</p>
+                </div>
+
+                <a href="criar.html" class="btn btn-custom">
+                    Novo Doce
+                </a>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-9">
+                    <input
+                        type="text"
+                        id="campoBusca"
+                        class="form-control"
+                        placeholder="Buscar doce por nome">
+                </div>
+
+                <div class="col-md-3 mt-2 mt-md-0">
+                    <button class="btn btn-custom w-100" onclick="buscarDoces()">
+                        Buscar
+                    </button>
+                </div>
+            </div>
+
+            <div id="mensagem"></div>
+
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Preço</th>
+                            <th>Estoque</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tabela-doces"></tbody>
+                </table>
+            </div>
+
+            <a href="../index.html" class="btn btn-secondary mt-3">
+                Voltar ao Menu
+            </a>
+
+        </div>
+
+    </main>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000"
+
+        const tabela = document.getElementById("tabela-doces")
+        const mensagem = document.getElementById("mensagem")
+        const campoBusca = document.getElementById("campoBusca")
+
+        async function carregarDoces(nome = "") {
+            try {
+                let url = `${API_URL}/doces/`
+
+                if (nome.trim() !== "") {
+                    url += `?nome=${encodeURIComponent(nome)}`
+                }
+
+                const resposta = await fetch(url)
+
+                if (!resposta.ok) {
+                    throw new Error("Erro ao carregar doces")
+                }
+
+                const doces = await resposta.json()
+
+                tabela.innerHTML = ""
+
+                if (doces.length === 0) {
+                    tabela.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                Nenhum doce encontrado.
+                            </td>
+                        </tr>
+                    `
+                    return
+                }
+
+                doces.forEach(doce => {
+                    tabela.innerHTML += `
+                        <tr>
+                            <td>${doce.id}</td>
+                            <td>${doce.nome}</td>
+                            <td>R$ ${Number(doce.preco).toFixed(2)}</td>
+                            <td>${doce.quantidade}</td>
+                            <td>
+                                <a href="editar.html?id=${doce.id}" class="btn btn-warning btn-sm">
+                                    Editar
+                                </a>
+
+                                <button class="btn btn-danger btn-sm" onclick="excluirDoce(${doce.id})">
+                                    Excluir
+                                </button>
+                            </td>
+                        </tr>
+                    `
+                })
+
+            } catch (erro) {
+                mensagem.innerHTML = `
+                    <div class="alert alert-danger">
+                        Não foi possível carregar os doces. Verifique se a API está rodando.
+                    </div>
+                `
+            }
+        }
+
+        function buscarDoces() {
+            carregarDoces(campoBusca.value)
+        }
+
+        campoBusca.addEventListener("input", function () {
+            if (campoBusca.value.trim() === "") {
+                carregarDoces()
+            }
+        })
+
+        async function excluirDoce(id) {
+            const confirmar = confirm("Tem certeza que deseja excluir este doce?")
+
+            if (!confirmar) {
+                return
+            }
+
+            try {
+                const resposta = await fetch(`${API_URL}/doces/${id}`, {
+                    method: "DELETE"
+                })
+
+                if (!resposta.ok) {
+                    const erro = await resposta.json()
+                    throw new Error(erro.detail || "Erro ao excluir doce")
+                }
+
+                mensagem.innerHTML = `
+                    <div class="alert alert-success">
+                        Doce excluído com sucesso!
+                    </div>
+                `
+
+                carregarDoces(campoBusca.value)
+
+            } catch (erro) {
+                mensagem.innerHTML = `
+                    <div class="alert alert-danger">
+                        ${erro.message}
+                    </div>
+                `
+            }
+        }
+
+        carregarDoces()
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
