@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from projeto_frontend_backend.backend import crud
+import crud
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from database import get_db

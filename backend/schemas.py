@@ -40,9 +40,16 @@ class PedidoBase(BaseModel):
 class PedidoCreate(PedidoBase):
     pass
 
+class DocePedidoResponse(BaseModel):
+    id: int
+    nome: str
+    preco: float
+
+    class Config:
+        from_attributes = True
 class ItemPedidoResponse(BaseModel):
-    doce_id: int
     quantidade: int
+    doce: DocePedidoResponse
 
     class Config:
         from_attributes = True
@@ -60,3 +67,4 @@ class PedidoUpdate(BaseModel):
     cliente: Optional[str] = None
     data: Optional[str] = None
     itens: Optional[list[ItemPedidoCreate]] = None
+
