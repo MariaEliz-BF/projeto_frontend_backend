@@ -11,7 +11,7 @@ router = APIRouter(
     tags=["Doces"]
 )
 #//buscar e buscar por id
-@router.get("/doces")
+@router.get("/")
 def listar_doces(
     nome: str = None,
     db: Session = Depends(get_db)

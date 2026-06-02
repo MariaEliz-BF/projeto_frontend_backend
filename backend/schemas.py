@@ -68,3 +68,9 @@ class PedidoUpdate(BaseModel):
     data: Optional[str] = None
     itens: Optional[list[ItemPedidoCreate]] = None
 
+class PedidoPaginadoResponse(BaseModel):
+    data: list[PedidoResponse]
+    total: int
+    page: int
+    limit: int
+    pages: int
