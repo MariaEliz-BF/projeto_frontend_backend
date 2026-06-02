@@ -3,9 +3,9 @@ from fastapi import Depends, HTTPException
 
 from database import get_db
 from models import Pedido, Doce, ItemPedido
-from schemas import PedidoResponse, PedidoCreate, PedidoUpdate
+from schemas import PedidoPaginadoResponse, PedidoResponse, PedidoCreate, PedidoUpdate
 from fastapi import APIRouter
-
+import math
 
 router = APIRouter(
     prefix="/pedidos",
@@ -13,13 +13,31 @@ router = APIRouter(
 )
 
 #//get e get por id pedido
-@router.get("/", response_model=list[PedidoResponse])
-def listar_pedidos(db: Session = Depends(get_db)):
+@router.get("/", response_model=PedidoPaginadoResponse)
+def listar_pedidos(
+    page: int = 1,
+    limit: int = 10,
+    db: Session = Depends(get_db)
+):
 
-    pedidos = db.query(Pedido).all()
+    skip = (page - 1) * limit
 
-    return pedidos
+    pedidos = (
+        db.query(Pedido)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
+    total = db.query(Pedido).count()
+
+    return {
+        "data": pedidos,
+        "total": total,
+        "page": page,
+        "limit": limit,
+        "pages": math.ceil(total / limit)
+    }
 @router.get("/{pedido_id}", response_model=PedidoResponse)
 def listar_pedido_id(
     pedido_id: int,
@@ -35,6 +53,7 @@ def listar_pedido_id(
             detail="pedido não encontrado"
         )
     return pedido
+
 
 #//restante das operações para pedidos
 @router.post("/", response_model=PedidoResponse)

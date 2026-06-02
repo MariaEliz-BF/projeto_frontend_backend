@@ -15,8 +15,15 @@ def criar_doce(db: Session, doce: DoceCreate):
 def listar_doces_id(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Doce).offset(skip).limit(limit).all()
 
-def listar_doces(db: Session):
-    return db.query(Doce).all()
+def listar_doces(db: Session,nome: str = None):
+    query = db.query(Doce)
+
+    if nome:
+        query = query.filter(
+            Doce.nome.ilike(f"%{nome}%")
+        )
+
+    return query.all()
 
 def atualizar_doce(db: Session, doce_id: int, doce: DoceUpdate):
     db_doce = db.query(Doce).filter(Doce.id == doce_id).first()

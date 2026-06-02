@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+import crud
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from database import get_db
@@ -10,12 +11,15 @@ router = APIRouter(
     tags=["Doces"]
 )
 #//buscar e buscar por id
-@router.get("/", response_model=list[DoceResponse])
-def listar_doces(db: Session = Depends(get_db)):
-
-    doces = db.query(Doce).all()
-
-    return doces
+@router.get("/")
+def listar_doces(
+    nome: str = None,
+    db: Session = Depends(get_db)
+):
+    return crud.listar_doces(
+        db=db,
+        nome=nome
+    )
 
 @router.get("/{doce_id}", response_model=DoceResponse)
 def listar_doces_id(
