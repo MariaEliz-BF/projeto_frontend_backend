@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from database import Base, engine
 from routes import doces, pedidos
-
+from routes import usuario
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -18,3 +18,4 @@ app.add_middleware(
 
 app.include_router(doces.router)
 app.include_router(pedidos.router)
+app.include_router(usuario.router)
