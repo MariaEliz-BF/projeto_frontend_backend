@@ -91,3 +91,10 @@ body {
     color: #7b3b11;
     font-size: 1.1rem;
 }
+
+.subtitulo-card {
+    font-family: 'Dancing Script', cursive;
+    color: #7b3b11;
+    font-size: 2.2rem;
+    font-weight: 700;
+}
