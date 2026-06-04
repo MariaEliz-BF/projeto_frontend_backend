@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doceria - Login</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand" href="index.html">Doceria</a>
+
+            <button class="btn btn-outline-custom" onclick="trocarPerfil()">
+                Trocar Perfil
+            </button>
+        </div>
+    </nav>
+
+    <main class="container login-container">
+
+        <div class="login-card">
+
+            <h1 class="titulo text-center mb-3">Entrar</h1>
+
+            <p class="text-center mb-4">
+                Acesse sua conta para gerenciar a doceria.
+            </p>
+
+            <form id="formLogin">
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">E-mail</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        class="form-control"
+                        placeholder="admin@email.com"
+                        required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="senha" class="form-label">Senha</label>
+
+                    <input
+                        type="password"
+                        id="senha"
+                        class="form-control"
+                        placeholder="Digite sua senha"
+                        required>
+                </div>
+
+                <div id="mensagem"></div>
+
+                <button type="submit" class="btn btn-custom w-100">
+                    Entrar
+                </button>
+
+            </form>
+
+            <div class="text-center mt-4">
+                <small class="text-muted">
+                    Usuário de teste: admin@email.com
+                </small>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000"
+
+        const formLogin = document.getElementById("formLogin")
+        const mensagem = document.getElementById("mensagem")
+
+        function trocarPerfil() {
+            localStorage.removeItem("token")
+            localStorage.removeItem("usuario")
+
+            mensagem.innerHTML = `
+                <div class="alert alert-info">
+                    Perfil removido. Faça login novamente.
+                </div>
+            `
+        }
+
+        formLogin.addEventListener("submit", async function (e) {
+            e.preventDefault()
+
+            const email = document.getElementById("email").value.trim()
+            const senha = document.getElementById("senha").value.trim()
+
+            try {
+                const resposta = await fetch(`${API_URL}/auth/login`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email,
+                        senha
+                    })
+                })
+
+                if (!resposta.ok) {
+                    const erro = await resposta.json()
+                    throw new Error(erro.detail || "E-mail ou senha inválidos.")
+                }
+
+                const dados = await resposta.json()
+
+                localStorage.setItem("token", dados.access_token)
+                localStorage.setItem("usuario", email)
+
+                mensagem.innerHTML = `
+                    <div class="alert alert-success">
+                        Login realizado com sucesso!
+                    </div>
+                `
+
+                setTimeout(() => {
+                    window.location.href = "index.html"
+                }, 800)
+
+            } catch (erro) {
+                mensagem.innerHTML = `
+                    <div class="alert alert-danger">
+                        ${erro.message}
+                    </div>
+                `
+            }
+        })
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

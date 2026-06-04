@@ -63,7 +63,6 @@
                     <strong>Prévia do total:</strong>
                     <span id="valorTotal">R$ 0,00</span>
                     <div class="small mt-1">
-                        O valor final será calculado e salvo pelo backend.
                     </div>
                 </div>
 
@@ -251,7 +250,7 @@
                 mensagem.innerHTML = `
                     <div class="alert alert-success">
                         Pedido cadastrado com sucesso! 
-                        Total salvo pelo backend: R$ ${Number(pedidoCriado.valor_total).toFixed(2)}
+                        Total: R$ ${Number(pedidoCriado.valor_total).toFixed(2)}
                     </div>
                 `
 
