@@ -74,3 +74,11 @@ class PedidoPaginadoResponse(BaseModel):
     page: int
     limit: int
     pages: int
+class LoginRequest(BaseModel):
+    email: str
+    senha: str
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str

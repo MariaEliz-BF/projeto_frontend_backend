@@ -36,3 +36,9 @@ class ItemPedido(Base):
     doce = relationship("Doce")
     pedido = relationship("Pedido", back_populates="itens")
 
+class Usuario(Base):
+    __tablename__ = "usuarios"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, nullable=False)
+    senha = Column(String, nullable=False)
