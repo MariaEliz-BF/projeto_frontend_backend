@@ -6,6 +6,7 @@ from models import Pedido, Doce, ItemPedido
 from schemas import PedidoPaginadoResponse, PedidoResponse, PedidoCreate, PedidoUpdate
 from fastapi import APIRouter
 import math
+from auth import verificar_token
 
 router = APIRouter(
     prefix="/pedidos",
@@ -59,7 +60,8 @@ def listar_pedido_id(
 @router.post("/", response_model=PedidoResponse)
 def criar_pedido(
     pedido: PedidoCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    usuario: str = Depends(verificar_token)
 ):
 
     valor_total = 0

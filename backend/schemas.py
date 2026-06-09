@@ -74,6 +74,7 @@ class PedidoPaginadoResponse(BaseModel):
     page: int
     limit: int
     pages: int
+    
 class LoginRequest(BaseModel):
     email: str
     senha: str
