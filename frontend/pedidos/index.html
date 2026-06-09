@@ -102,6 +102,24 @@
         const limite = 10
         let totalPaginas = 1
 
+        function formatarData(data) {
+            if (!data) {
+                return ""
+            }
+
+            const partes = data.split("-")
+
+            if (partes.length !== 3) {
+                return data
+            }
+
+            const ano = partes[0]
+            const mes = partes[1]
+            const dia = partes[2]
+
+            return `${dia}/${mes}/${ano}`
+        }
+
         async function carregarPedidos(page = 1) {
             try {
                 mensagem.innerHTML = ""
@@ -144,24 +162,28 @@
             }
 
             pedidos.forEach(pedido => {
-                const itens = pedido.itens.map(item => {
-                    return `${item.quantidade}x ${item.doce.nome}`
-                }).join("<br>")
+                let itens = "Sem itens"
+
+                if (pedido.itens && pedido.itens.length > 0) {
+                    itens = pedido.itens.map(item => {
+                        return `${item.quantidade}x ${item.doce.nome}`
+                    }).join("<br>")
+                }
 
                 tabela.innerHTML += `
                     <tr>
                         <td>${pedido.id}</td>
                         <td>${pedido.cliente}</td>
-                        <td>${pedido.data}</td>
+                        <td>${formatarData(pedido.data)}</td>
                         <td>${itens}</td>
                         <td>R$ ${Number(pedido.valor_total).toFixed(2)}</td>
                         <td>
-                            <a href="editar.html?id=${pedido.id}" class="btn btn-warning btn-sm">
-                                Editar
+                            <a href="editar.html?id=${pedido.id}" class="btn btn-editar btn-sm">
+                                    Editar
                             </a>
 
-                            <button class="btn btn-danger btn-sm" onclick="excluirPedido(${pedido.id})">
-                                Excluir
+                            <button class="btn btn-excluir btn-sm" onclick="excluirPedido(${pedido.id})">
+                                    Excluir
                             </button>
                         </td>
                     </tr>
@@ -215,8 +237,18 @@
                 btnProximo.disabled = true
 
             } catch (erro) {
-                tabela.innerHTML = ""
+                tabela.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            Nenhum pedido encontrado.
+                        </td>
+                    </tr>
+                `
+
                 infoPagina.textContent = ""
+
+                btnAnterior.disabled = true
+                btnProximo.disabled = true
 
                 mensagem.innerHTML = `
                     <div class="alert alert-danger">
@@ -229,6 +261,12 @@
         campoBusca.addEventListener("input", function () {
             if (campoBusca.value.trim() === "") {
                 carregarPedidos(1)
+            }
+        })
+
+        campoBusca.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                buscarPedidoPorId()
             }
         })
 

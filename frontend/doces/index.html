@@ -39,7 +39,7 @@
                         type="text"
                         id="campoBusca"
                         class="form-control"
-                        placeholder="Buscar doce por nome">
+                        placeholder="Buscar doce por ID ou nome">
                 </div>
 
                 <div class="col-md-3 mt-2 mt-md-0">
@@ -82,62 +82,101 @@
         const mensagem = document.getElementById("mensagem")
         const campoBusca = document.getElementById("campoBusca")
 
-        async function carregarDoces(nome = "") {
+        function formatarPreco(valor) {
+            return Number(valor).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            })
+        }
+
+        async function carregarDoces(busca = "") {
             try {
+                mensagem.innerHTML = ""
+                tabela.innerHTML = ""
+
+                const buscaLimpa = busca.trim()
+
                 let url = `${API_URL}/doces/`
 
-                if (nome.trim() !== "") {
-                    url += `?nome=${encodeURIComponent(nome)}`
+                if (buscaLimpa !== "") {
+                    const buscaEhNumero = !isNaN(buscaLimpa)
+
+                    if (buscaEhNumero) {
+                        url = `${API_URL}/doces/${buscaLimpa}`
+                    } else {
+                        url = `${API_URL}/doces/?nome=${encodeURIComponent(buscaLimpa)}`
+                    }
                 }
 
                 const resposta = await fetch(url)
 
                 if (!resposta.ok) {
-                    throw new Error("Erro ao carregar doces")
+                    const erro = await resposta.json()
+                    throw new Error(erro.detail || "Erro ao carregar doces")
                 }
 
-                const doces = await resposta.json()
+                const resultado = await resposta.json()
 
-                tabela.innerHTML = ""
+                let doces = []
 
-                if (doces.length === 0) {
-                    tabela.innerHTML = `
-                        <tr>
-                            <td colspan="5" class="text-center">
-                                Nenhum doce encontrado.
-                            </td>
-                        </tr>
-                    `
-                    return
+                if (Array.isArray(resultado)) {
+                    doces = resultado
+                } else {
+                    doces = [resultado]
                 }
 
-                doces.forEach(doce => {
-                    tabela.innerHTML += `
-                        <tr>
-                            <td>${doce.id}</td>
-                            <td>${doce.nome}</td>
-                            <td>R$ ${Number(doce.preco).toFixed(2)}</td>
-                            <td>${doce.quantidade}</td>
-                            <td>
-                                <a href="editar.html?id=${doce.id}" class="btn btn-warning btn-sm">
-                                    Editar
-                                </a>
-
-                                <button class="btn btn-danger btn-sm" onclick="excluirDoce(${doce.id})">
-                                    Excluir
-                                </button>
-                            </td>
-                        </tr>
-                    `
-                })
+                renderizarDoces(doces)
 
             } catch (erro) {
+                tabela.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            Nenhum doce encontrado.
+                        </td>
+                    </tr>
+                `
+
                 mensagem.innerHTML = `
                     <div class="alert alert-danger">
-                        Não foi possível carregar os doces. Verifique se a API está rodando.
+                        ${erro.message}
                     </div>
                 `
             }
+        }
+
+        function renderizarDoces(doces) {
+            tabela.innerHTML = ""
+
+            if (!doces || doces.length === 0) {
+                tabela.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            Nenhum doce encontrado.
+                        </td>
+                    </tr>
+                `
+                return
+            }
+
+            doces.forEach(doce => {
+                tabela.innerHTML += `
+                    <tr>
+                        <td>${doce.id}</td>
+                        <td>${doce.nome}</td>
+                        <td>${formatarPreco(doce.preco)}</td>
+                        <td>${doce.quantidade}</td>
+                        <td>
+                            <a href="editar.html?id=${doce.id}" class="btn btn-editar btn-sm">
+                                    Editar
+                            </a>
+
+                            <button class="btn btn-excluir btn-sm" onclick="excluirDoce(${doce.id})">
+                                    Excluir
+                            </button>
+                        </td>
+                    </tr>
+                `
+            })
         }
 
         function buscarDoces() {
@@ -147,6 +186,12 @@
         campoBusca.addEventListener("input", function () {
             if (campoBusca.value.trim() === "") {
                 carregarDoces()
+            }
+        })
+
+        campoBusca.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                buscarDoces()
             }
         })
 

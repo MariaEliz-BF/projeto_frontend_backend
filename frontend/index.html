@@ -8,14 +8,23 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 
 <body>
 
-    <nav class="navbar">
-        <div class="container justify-content-center">
-            <a class="navbar-brand" href="index.html">Doceria</a>
-        </div>
+     <nav class="navbar">
+         <div class="container d-flex justify-content-between align-items-center">
+         <a class="navbar-brand" href="index.html">Doceria</a>
+
+          <div class="d-flex align-items-center gap-2">
+                <span id="usuarioLogado" class="usuario-logado"></span>
+
+                <button class="btn usuario-btn" onclick="trocarPerfil()" title="Trocar perfil">
+                    <i class="bi bi-person-circle"></i>
+                </button>
+         </div>
+     </div>
     </nav>
 
     <main class="container mt-5">
@@ -60,6 +69,25 @@
         </div>
 
     </main>
+
+    <script>
+   
+    const usuarioLogado = document.getElementById("usuarioLogado")
+    const usuario = localStorage.getItem("usuario")
+
+    if (usuario) {
+        usuarioLogado.textContent = `Logado como: ${usuario}`
+    } else {
+        usuarioLogado.textContent = "Nenhum perfil logado"
+    }
+
+    function trocarPerfil() {
+        localStorage.removeItem("token")
+        localStorage.removeItem("usuario")
+        window.location.href = "login.html"
+    }
+
+</script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
