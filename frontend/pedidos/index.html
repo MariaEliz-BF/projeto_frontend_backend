@@ -8,13 +8,22 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 
 <body>
 
     <nav class="navbar">
-        <div class="container justify-content-center">
+        <div class="container d-flex justify-content-between align-items-center">
             <a class="navbar-brand" href="../index.html">Doceria</a>
+
+            <div class="usuario-area">
+                <span id="usuarioLogado" class="usuario-logado"></span>
+
+                <button class="btn usuario-btn" onclick="sair()" title="Sair">
+                    <i class="bi bi-person-circle"></i>
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -91,6 +100,27 @@
     <script>
         const API_URL = "http://127.0.0.1:8000"
 
+        const token = localStorage.getItem("token")
+        const usuario = localStorage.getItem("usuario")
+
+        if (!token) {
+            window.location.href = "../login.html"
+        }
+
+        const usuarioLogado = document.getElementById("usuarioLogado")
+
+        if (usuario) {
+            usuarioLogado.textContent = `Logado como: ${usuario}`
+        } else {
+            usuarioLogado.textContent = "Usuário não identificado"
+        }
+
+        function sair() {
+            localStorage.removeItem("token")
+            localStorage.removeItem("usuario")
+            window.location.href = "../login.html"
+        }
+
         const tabela = document.getElementById("tabela-pedidos")
         const mensagem = document.getElementById("mensagem")
         const campoBusca = document.getElementById("campoBusca")
@@ -118,6 +148,13 @@
             const dia = partes[2]
 
             return `${dia}/${mes}/${ano}`
+        }
+
+        function formatarPreco(valor) {
+            return Number(valor).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            })
         }
 
         async function carregarPedidos(page = 1) {
@@ -176,14 +213,14 @@
                         <td>${pedido.cliente}</td>
                         <td>${formatarData(pedido.data)}</td>
                         <td>${itens}</td>
-                        <td>R$ ${Number(pedido.valor_total).toFixed(2)}</td>
+                        <td>${formatarPreco(pedido.valor_total)}</td>
                         <td>
                             <a href="editar.html?id=${pedido.id}" class="btn btn-editar btn-sm">
-                                    Editar
+                                Editar
                             </a>
 
                             <button class="btn btn-excluir btn-sm" onclick="excluirPedido(${pedido.id})">
-                                    Excluir
+                                Excluir
                             </button>
                         </td>
                     </tr>
@@ -279,7 +316,10 @@
 
             try {
                 const resposta = await fetch(`${API_URL}/pedidos/${id}`, {
-                    method: "DELETE"
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
                 })
 
                 if (!resposta.ok) {

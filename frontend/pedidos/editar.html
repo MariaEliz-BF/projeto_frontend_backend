@@ -8,16 +8,24 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 
 <body>
 
     <nav class="navbar">
-        <div class="container justify-content-center">
+        <div class="container d-flex justify-content-between align-items-center">
             <a class="navbar-brand" href="../index.html">Doceria</a>
+
+            <div class="usuario-area">
+                <span id="usuarioLogado" class="usuario-logado"></span>
+
+                <button class="btn usuario-btn" onclick="sair()" title="Sair">
+                    <i class="bi bi-person-circle"></i>
+                </button>
+            </div>
         </div>
     </nav>
-
     <main class="container mt-5">
 
         <div class="card-custom">
@@ -63,9 +71,6 @@
                 <div class="mb-4 p-3 rounded total-box">
                     <strong>Prévia do total:</strong>
                     <span id="valorTotal">R$ 0,00</span>
-                    <div class="small mt-1">
-                        O valor correto deve ser recalculado pelo backend.
-                    </div>
                 </div>
 
                 <div class="d-flex gap-2">
@@ -87,6 +92,27 @@
     <script>
         const API_URL = "http://127.0.0.1:8000"
 
+        const token = localStorage.getItem("token")
+        const usuario = localStorage.getItem("usuario")
+
+        if (!token) {
+            window.location.href = "../login.html"
+        }
+
+        const usuarioLogado = document.getElementById("usuarioLogado")
+
+        if (usuario) {
+            usuarioLogado.textContent = `Logado como: ${usuario}`
+        } else {
+            usuarioLogado.textContent = "Usuário não identificado"
+        }
+
+        function sair() {
+            localStorage.removeItem("token")
+            localStorage.removeItem("usuario")
+            window.location.href = "../login.html"
+        }
+
         const params = new URLSearchParams(window.location.search)
         const pedidoId = params.get("id")
 
@@ -100,6 +126,13 @@
 
         let pedidoAtual = null
         let doces = []
+
+        function formatarPreco(valor) {
+            return Number(valor).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            })
+        }
 
         async function carregarDados() {
             if (!pedidoId) {
@@ -184,7 +217,7 @@
 
                                 <div class="text-muted small">
                                     ID: ${doce.id} |
-                                    R$ ${Number(doce.preco).toFixed(2)} |
+                                    ${formatarPreco(doce.preco)} |
                                     Estoque atual: ${doce.quantidade}
                                 </div>
                             </div>
@@ -240,7 +273,7 @@
                 }
             })
 
-            valorTotal.textContent = `R$ ${total.toFixed(2)}`
+            valorTotal.textContent = formatarPreco(total)
         }
 
         formPedido.addEventListener("submit", async function (e) {
@@ -273,7 +306,8 @@
                 const resposta = await fetch(`${API_URL}/pedidos/${pedidoId}/substituir`, {
                     method: "PUT",
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
                     },
                     body: JSON.stringify({
                         cliente,
@@ -286,8 +320,6 @@
                     const erro = await resposta.json()
                     throw new Error(erro.detail || "Erro ao atualizar pedido")
                 }
-
-                const pedidoAtualizado = await resposta.json()
 
                 mensagem.innerHTML = `
                     <div class="alert alert-success">
