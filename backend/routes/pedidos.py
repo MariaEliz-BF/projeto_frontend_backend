@@ -61,7 +61,7 @@ def listar_pedido_id(
 def criar_pedido(
     pedido: PedidoCreate,
     db: Session = Depends(get_db),
-    usuario: str = Depends(verificar_token)
+    
 ):
 
     valor_total = 0

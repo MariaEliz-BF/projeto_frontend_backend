@@ -5,6 +5,7 @@ from schemas import LoginRequest, TokenResponse
 from auth import criar_token
 from database import get_db
 from models import Usuario
+from security import gerar_hash, verificar_senha
 
 router = APIRouter(
     prefix="/auth",
@@ -16,7 +17,7 @@ def criar_admin(db: Session = Depends(get_db)):
 
     usuario = Usuario(
         email="admin@email.com",
-        senha="123456"
+        senha=gerar_hash("123456")
     )
 
     db.add(usuario)
@@ -41,7 +42,10 @@ def login(
             detail="Email ou senha inválidos"
         )
 
-    if usuario.senha != dados.senha:
+    if not verificar_senha(
+        dados.senha,
+        usuario.senha
+    ):
         raise HTTPException(
             status_code=401,
             detail="Email ou senha inválidos"
