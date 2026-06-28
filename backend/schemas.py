@@ -83,3 +83,8 @@ class LoginRequest(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str
+
+class UsuarioCreate(BaseModel):
+    nome: str
+    email: str
+    senha: str

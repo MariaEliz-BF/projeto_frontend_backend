@@ -1,7 +1,11 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from schemas import LoginRequest, TokenResponse
+from schemas import (
+    LoginRequest,
+    TokenResponse,
+    UsuarioCreate
+)
 from auth import criar_token
 from database import get_db
 from models import Usuario
@@ -25,6 +29,35 @@ def criar_admin(db: Session = Depends(get_db)):
 
     return {"mensagem": "Usuário criado"}
 
+
+@router.post("/usuarios")
+def criar_usuario(
+    dados: UsuarioCreate,
+    db: Session = Depends(get_db)
+):
+
+    usuario_existente = db.query(Usuario).filter(
+        Usuario.email == dados.email
+    ).first()
+
+    if usuario_existente:
+        raise HTTPException(
+            status_code=409,
+            detail="Email já cadastrado"
+        )
+
+    usuario = Usuario(
+        nome=dados.nome,
+        email=dados.email,
+        senha=gerar_hash(dados.senha)
+    )
+
+    db.add(usuario)
+    db.commit()
+
+    return {
+        "mensagem": "Usuário criado com sucesso"
+    }
 
 @router.post("/login", response_model=TokenResponse)
 def login(
