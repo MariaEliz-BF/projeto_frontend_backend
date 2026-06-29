@@ -88,3 +88,4 @@ class UsuarioCreate(BaseModel):
     nome: str
     email: str
     senha: str
+    tipo: str
