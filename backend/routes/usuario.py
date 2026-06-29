@@ -20,11 +20,11 @@ router = APIRouter(
 def criar_admin(db: Session = Depends(get_db)):
 
     usuario = Usuario(
-        email="admin@email.com",
-        senha=gerar_hash("123456")
-        tipo = "admin"
-    )
-
+    nome="Administrador",
+    email="admin@email.com",
+    senha=gerar_hash("123456"),
+    tipo="admin"
+)
     db.add(usuario)
     db.commit()
 
@@ -50,7 +50,7 @@ def criar_usuario(
     usuario = Usuario(
         nome=dados.nome,
         email=dados.email,
-        senha=gerar_hash(dados.senha)
+        senha=gerar_hash(dados.senha),
         tipo = "usuario"
     )
     db.add(usuario)
