@@ -43,3 +43,4 @@ class Usuario(Base):
     nome = Column(String)
     email = Column(String, unique=True)
     senha = Column(String)
+    tipo = Column(String)

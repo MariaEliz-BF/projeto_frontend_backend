@@ -22,6 +22,7 @@ def criar_admin(db: Session = Depends(get_db)):
     usuario = Usuario(
         email="admin@email.com",
         senha=gerar_hash("123456")
+        tipo = "admin"
     )
 
     db.add(usuario)
@@ -50,8 +51,8 @@ def criar_usuario(
         nome=dados.nome,
         email=dados.email,
         senha=gerar_hash(dados.senha)
+        tipo = "usuario"
     )
-
     db.add(usuario)
     db.commit()
 
@@ -91,8 +92,8 @@ def login(
     )
 
     print("Token criado:", token)
-
     return {
-        "access_token": token,
-        "token_type": "bearer"
+        "access_token": token, 
+        "token_type": "bearer",
+        "tipo": usuario.tipo
     }
