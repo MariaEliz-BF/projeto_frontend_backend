@@ -10,7 +10,7 @@ from auth import criar_token
 from database import get_db
 from models import Usuario
 from security import gerar_hash, verificar_senha
-
+from email_config import enviar_email
 router = APIRouter(
     prefix="/auth",
     tags=["Auth"]
@@ -32,7 +32,7 @@ def criar_admin(db: Session = Depends(get_db)):
 
 
 @router.post("/usuarios")
-def criar_usuario(
+async def criar_usuario(
     dados: UsuarioCreate,
     db: Session = Depends(get_db)
 ):
@@ -57,9 +57,8 @@ def criar_usuario(
     db.commit()
 
     return {
-        "mensagem": "Usuário criado com sucesso"
-    }
-
+    "mensagem": "Usuário criado com sucesso"
+ }
 @router.post("/login", response_model=TokenResponse)
 def login(
     dados: LoginRequest,
