@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Doces da Mel | Cadastro</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+
+            <a class="navbar-brand" href="login.html">
+                Doces da Mel
+            </a>
+
+        </div>
+    </nav>
+
+    <main class="login-container">
+
+        <div class="login-card">
+
+            <div class="text-center mb-4">
+
+                <i class="bi bi-person-plus-fill display-4"></i>
+
+                <h1 class="titulo mt-2">
+                    Criar Conta
+                </h1>
+
+                <p class="text-muted">
+                    Cadastre-se para acessar o sistema da Doces da Mel.
+                </p>
+
+            </div>
+
+            <form id="formCadastro">
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Nome
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="nome"
+                        placeholder="Digite seu nome"
+                        required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        E-mail
+                    </label>
+
+                    <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        placeholder="Digite seu e-mail"
+                        required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Senha
+                    </label>
+
+                    <input
+                        type="password"
+                        class="form-control"
+                        id="senha"
+                        placeholder="Digite sua senha"
+                        required>
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label class="form-label">
+                        Confirmar Senha
+                    </label>
+
+                    <input
+                        type="password"
+                        class="form-control"
+                        id="confirmarSenha"
+                        placeholder="Confirme sua senha"
+                        required>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-custom w-100">
+
+                    <i class="bi bi-person-check-fill me-2"></i>
+
+                    Criar Conta
+
+                </button>
+
+            </form>
+
+            <hr class="my-4">
+
+            <div class="text-center">
+
+                <p class="mb-2">
+
+                    Já possui uma conta?
+
+                </p>
+
+                <a
+                    href="login.html"
+                    class="btn btn-outline-custom">
+
+                    Fazer Login
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </main>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+        <script src="js/app.js"></script>
+        <script src="js/api.js"></script>
+        <script src="js/ui.js"></script>
+        <script src="js/auth.js"></script>
+        <script src="js/cadastro.js"></script>
+</body>
+
+</html>

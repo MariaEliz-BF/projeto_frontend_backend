@@ -2,223 +2,235 @@
 <html lang="pt-BR">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doceria - Editar Doce</title>
+
+    <title>Doces da Mel | Editar Doce</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
 </head>
 
 <body>
 
-        <nav class="navbar">
-            <div class="container d-flex justify-content-between align-items-center">
-                <a class="navbar-brand" href="../index.html">Doceria</a>
+<nav class="navbar">
 
-                <div class="usuario-area">
-                    <span id="usuarioLogado" class="usuario-logado"></span>
+    <div class="container d-flex justify-content-between align-items-center">
 
-                    <button class="btn usuario-btn" onclick="sair()" title="Sair">
-                        <i class="bi bi-person-circle"></i>
-                    </button>
-                </div>
+        <a class="navbar-brand" href="../index.html">
+            Doces da Mel
+        </a>
+
+        <button
+            class="btn usuario-btn"
+            id="btnLogout"
+            title="Sair">
+
+            <i class="bi bi-box-arrow-right"></i>
+
+        </button>
+
+    </div>
+
+</nav>
+
+<main class="container mt-5">
+
+    <div class="card-custom">
+
+        <h1 class="titulo mb-3">
+            Editar Doce
+        </h1>
+
+        <p class="mb-4">
+            Altere as informações do produto.
+        </p>
+
+        <form id="formDoce">
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Nome
+                </label>
+
+                <input
+                    type="text"
+                    id="nome"
+                    class="form-control"
+                    required>
+
             </div>
-        </nav>
 
-    <main class="container mt-5">
+            <div class="mb-3">
 
-        <div class="card-custom">
+                <label class="form-label">
+                    Preço
+                </label>
 
-            <h1 class="titulo mb-3">Editar Doce</h1>
+                <input
+                    type="number"
+                    id="preco"
+                    class="form-control"
+                    step="0.01"
+                    min="0"
+                    required>
 
-            <p class="mb-4">
-                Atualize as informações do produto selecionado.
-            </p>
+            </div>
 
-            <div id="mensagem"></div>
+            <div class="mb-4">
 
-            <form id="formDoce">
+                <label class="form-label">
+                    Quantidade em estoque
+                </label>
 
-                <div class="mb-3">
-                    <label for="nome" class="form-label">
-                        Nome do doce
-                    </label>
+                <input
+                    type="number"
+                    id="quantidade"
+                    class="form-control"
+                    min="0"
+                    required>
 
-                    <input
-                        type="text"
-                        id="nome"
-                        class="form-control"
-                        required>
-                </div>
+            </div>
 
-                <div class="mb-3">
-                    <label for="preco" class="form-label">
-                        Preço
-                    </label>
+            <div class="d-flex gap-2">
 
-                    <input
-                        type="number"
-                        id="preco"
-                        class="form-control"
-                        step="0.01"
-                        min="0"
-                        required>
-                </div>
+                <button
+                    type="submit"
+                    class="btn btn-custom">
 
-                <div class="mb-4">
-                    <label for="quantidade" class="form-label">
-                        Quantidade em estoque
-                    </label>
+                    <i class="bi bi-check-circle me-1"></i>
 
-                    <input
-                        type="number"
-                        id="quantidade"
-                        class="form-control"
-                        min="0"
-                        required>
-                </div>
+                    Salvar Alterações
 
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-custom">
-                        Salvar Alterações
-                    </button>
+                </button>
 
-                    <a href="index.html" class="btn btn-secondary">
-                        Cancelar
-                    </a>
-                </div>
+                <a
+                    href="index.html"
+                    class="btn btn-outline-secondary">
 
-            </form>
+                    Cancelar
 
-        </div>
+                </a>
 
-    </main>
+            </div>
 
-    <script>
-        const API_URL = "http://127.0.0.1:8000"
+        </form>
 
-        const token = localStorage.getItem("token")
-        const usuario = localStorage.getItem("usuario")
+    </div>
 
-        if (!token) {
-            window.location.href = "../login.html"
-        }
+</main>
 
-        const usuarioLogado = document.getElementById("usuarioLogado")
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-        if (usuario) {
-            usuarioLogado.textContent = `Logado como: ${usuario}`
-        } else {
-            usuarioLogado.textContent = "Usuário não identificado"
-        }
+<script src="../js/app.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/ui.js"></script>
+<script src="../js/auth.js"></script>
 
-        function sair() {
-            localStorage.removeItem("token")
-            localStorage.removeItem("usuario")
-            window.location.href = "../login.html"
-        }
+<script>
 
-        const params = new URLSearchParams(window.location.search)
-        const id = params.get("id")
+protegerPagina();
 
-        const form = document.getElementById("formDoce")
-        const mensagem = document.getElementById("mensagem")
+document.getElementById("btnLogout")
+    .addEventListener("click", sair);
 
-        const campoNome = document.getElementById("nome")
-        const campoPreco = document.getElementById("preco")
-        const campoQuantidade = document.getElementById("quantidade")
+const id = new URLSearchParams(window.location.search).get("id");
 
-        async function carregarDoce() {
-            if (!id) {
-                mensagem.innerHTML = `
-                    <div class="alert alert-danger">
-                        Doce não encontrado. Volte para a listagem e tente novamente.
-                    </div>
-                `
-                form.style.display = "none"
-                return
+const campoNome = document.getElementById("nome");
+const campoPreco = document.getElementById("preco");
+const campoQuantidade = document.getElementById("quantidade");
+
+async function carregarDoce() {
+
+    if (!id) {
+
+        mostrarToast("Produto não encontrado.", "erro");
+
+        setTimeout(() => {
+
+            window.location.href = "index.html";
+
+        }, 1500);
+
+        return;
+
+    }
+
+    const resposta = await api.get(`/doces/${id}`);
+
+    if (!resposta.ok) {
+
+        mostrarToast("Erro ao carregar doce.", "erro");
+
+        return;
+
+    }
+
+    campoNome.value = resposta.data.nome;
+    campoPreco.value = resposta.data.preco;
+    campoQuantidade.value = resposta.data.quantidade;
+
+}
+
+document.getElementById("formDoce")
+.addEventListener("submit", async (e)=>{
+
+    e.preventDefault();
+
+    confirmarAcao(
+
+        "Salvar alterações",
+
+        "Deseja realmente salvar as alterações deste doce?",
+
+        async ()=>{
+
+            const resposta = await api.put(`/doces/${id}/substituir`,{
+
+                nome: campoNome.value.trim(),
+
+                preco: Number(campoPreco.value),
+
+                quantidade: Number(campoQuantidade.value)
+
+            });
+
+            if(!resposta.ok){
+
+                mostrarToast(
+                    resposta.data?.detail || "Erro ao atualizar.",
+                    "erro"
+                );
+
+                return;
+
             }
 
-            try {
-                const resposta = await fetch(`${API_URL}/doces/${id}`)
+            mostrarToast("Doce atualizado com sucesso!");
 
-                if (!resposta.ok) {
-                    const erro = await resposta.json()
-                    throw new Error(erro.detail || "Erro ao buscar doce")
-                }
+            setTimeout(()=>{
 
-                const doce = await resposta.json()
+                window.location.href="index.html";
 
-                campoNome.value = doce.nome
-                campoPreco.value = doce.preco
-                campoQuantidade.value = doce.quantidade
+            },1500);
 
-            } catch (erro) {
-                mensagem.innerHTML = `
-                    <div class="alert alert-danger">
-                        ${erro.message}
-                    </div>
-                `
-                form.style.display = "none"
-            }
-        }
+        },
 
-        form.addEventListener("submit", async function (e) {
-            e.preventDefault()
+        "Salvar"
 
-            const nome = campoNome.value.trim()
-            const preco = Number(campoPreco.value)
-            const quantidade = Number(campoQuantidade.value)
+    );
 
-            if (preco < 0 || quantidade < 0) {
-                mensagem.innerHTML = `
-                    <div class="alert alert-warning">
-                        Preço e quantidade não podem ser negativos.
-                    </div>
-                `
-                return
-            }
+});
 
-            try {
-                const resposta = await fetch(`${API_URL}/doces/${id}/substituir`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        nome,
-                        preco,
-                        quantidade
-                    })
-                })
+carregarDoce();
 
-                if (!resposta.ok) {
-                    const erro = await resposta.json()
-                    throw new Error(erro.detail || "Erro ao atualizar doce")
-                }
-
-                mensagem.innerHTML = `
-                    <div class="alert alert-success">
-                        Doce atualizado com sucesso!
-                    </div>
-                `
-
-            } catch (erro) {
-                mensagem.innerHTML = `
-                    <div class="alert alert-danger">
-                        ${erro.message}
-                    </div>
-                `
-            }
-        })
-
-        carregarDoce()
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+</script>
 
 </body>
 

@@ -2,184 +2,215 @@
 <html lang="pt-BR">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doceria - Novo Doce</title>
+
+    <title>Doces da Mel | Novo Doce</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
 </head>
 
 <body>
 
-   <nav class="navbar">
+<nav class="navbar">
+
     <div class="container d-flex justify-content-between align-items-center">
-        <a class="navbar-brand" href="../index.html">Doceria</a>
 
-        <div class="usuario-area">
-            <span id="usuarioLogado" class="usuario-logado"></span>
+        <a class="navbar-brand" href="../index.html">
+            Doces da Mel
+        </a>
 
-            <button class="btn usuario-btn" onclick="sair()" title="Sair">
-                <i class="bi bi-person-circle"></i>
-            </button>
-        </div>
+        <button
+            class="btn usuario-btn"
+            id="btnLogout"
+            title="Sair">
+
+            <i class="bi bi-box-arrow-right"></i>
+
+        </button>
+
     </div>
+
 </nav>
 
-    <main class="container mt-5">
+<main class="container mt-5">
 
-        <div class="card-custom">
+    <div class="card-custom">
 
-            <h1 class="titulo mb-3">Novo Doce</h1>
+        <h1 class="titulo mb-3">
+            Novo Doce
+        </h1>
 
-            <p class="mb-4">
-                Cadastre um novo produto no sistema.
-            </p>
+        <p class="mb-4">
+            Cadastre um novo produto no sistema.
+        </p>
 
-            <form id="formDoce">
+        <form id="formDoce">
 
-                <div class="mb-3">
-                    <label for="nome" class="form-label">
-                        Nome do doce
-                    </label>
+            <div class="mb-3">
 
-                    <input
-                        type="text"
-                        id="nome"
-                        class="form-control"
-                        placeholder="Ex: Brigadeiro"
-                        required>
-                </div>
+                <label class="form-label">
+                    Nome do doce
+                </label>
 
-                <div class="mb-3">
-                    <label for="preco" class="form-label">
-                        Preço
-                    </label>
+                <input
+                    type="text"
+                    id="nome"
+                    class="form-control"
+                    placeholder="Ex: Brigadeiro"
+                    required>
 
-                    <input
-                        type="number"
-                        id="preco"
-                        class="form-control"
-                        step="0.01"
-                        min="0"
-                        placeholder="Ex: 3.50"
-                        required>
-                </div>
+            </div>
 
-                <div class="mb-4">
-                    <label for="quantidade" class="form-label">
-                        Quantidade em estoque
-                    </label>
+            <div class="mb-3">
 
-                    <input
-                        type="number"
-                        id="quantidade"
-                        class="form-control"
-                        min="0"
-                        placeholder="Ex: 20"
-                        required>
-                </div>
+                <label class="form-label">
+                    Preço
+                </label>
 
-                <div id="mensagem"></div>
+                <input
+                    type="number"
+                    id="preco"
+                    class="form-control"
+                    step="0.01"
+                    min="0"
+                    placeholder="Ex: 3,50"
+                    required>
 
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-custom">
-                        Salvar Doce
-                    </button>
+            </div>
 
-                    <a href="index.html" class="btn btn-secondary">
-                        Cancelar
-                    </a>
-                </div>
+            <div class="mb-4">
 
-            </form>
+                <label class="form-label">
+                    Quantidade em estoque
+                </label>
 
-        </div>
+                <input
+                    type="number"
+                    id="quantidade"
+                    class="form-control"
+                    min="0"
+                    placeholder="Ex: 20"
+                    required>
 
-    </main>
+            </div>
 
-    <script>
-        const API_URL = "http://127.0.0.1:8000"
+            <div class="d-flex gap-2">
 
-        const token = localStorage.getItem("token")
-        const usuario = localStorage.getItem("usuario")
+                <button
+                    type="submit"
+                    class="btn btn-custom">
 
-        if (!token) {
-            window.location.href = "../login.html"
-        }
+                    <i class="bi bi-plus-circle me-1"></i>
 
-        const usuarioLogado = document.getElementById("usuarioLogado")
+                    Salvar Doce
 
-        if (usuario) {
-            usuarioLogado.textContent = `Logado como: ${usuario}`
-        } else {
-            usuarioLogado.textContent = "Usuário não identificado"
-        }
+                </button>
 
-        function sair() {
-            localStorage.removeItem("token")
-            localStorage.removeItem("usuario")
-            window.location.href = "../login.html"
-        }
+                <a
+                    href="index.html"
+                    class="btn btn-outline-secondary">
 
-        const form = document.getElementById("formDoce")
-        const mensagem = document.getElementById("mensagem")
+                    Cancelar
 
-        form.addEventListener("submit", async function (e) {
-            e.preventDefault()
+                </a>
 
-            const nome = document.getElementById("nome").value.trim()
-            const preco = Number(document.getElementById("preco").value)
-            const quantidade = Number(document.getElementById("quantidade").value)
+            </div>
 
-            if (preco < 0 || quantidade < 0) {
-                mensagem.innerHTML = `
-                    <div class="alert alert-warning">
-                        Preço e quantidade não podem ser negativos.
-                    </div>
-                `
-                return
+        </form>
+
+    </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<script src="../js/app.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/ui.js"></script>
+<script src="../js/auth.js"></script>
+
+<script>
+
+protegerPagina();
+
+document
+    .getElementById("btnLogout")
+    .addEventListener("click", sair);
+
+const form = document.getElementById("formDoce");
+
+form.addEventListener("submit", async (e) => {
+
+    e.preventDefault();
+
+    const nome = document.getElementById("nome").value.trim();
+    const preco = Number(document.getElementById("preco").value);
+    const quantidade = Number(document.getElementById("quantidade").value);
+
+    if (preco < 0 || quantidade < 0) {
+
+        mostrarToast(
+            "Preço e quantidade não podem ser negativos.",
+            "erro"
+        );
+
+        return;
+
+    }
+
+    confirmarAcao(
+
+        "Cadastrar doce",
+
+        "Deseja cadastrar este novo doce?",
+
+        async () => {
+
+            const resposta = await api.post("/doces/", {
+
+                nome,
+                preco,
+                quantidade
+
+            });
+
+            if (!resposta.ok) {
+
+                mostrarToast(
+
+                    resposta.data?.detail ||
+                    "Erro ao cadastrar doce.",
+
+                    "erro"
+
+                );
+
+                return;
+
             }
 
-            try {
-                const resposta = await fetch(`${API_URL}/doces/`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        nome,
-                        preco,
-                        quantidade
-                    })
-                })
+            mostrarToast("Doce cadastrado com sucesso!");
 
-                if (!resposta.ok) {
-                    const erro = await resposta.json()
-                    throw new Error(erro.detail || "Erro ao cadastrar doce")
-                }
+            form.reset();
 
-                mensagem.innerHTML = `
-                    <div class="alert alert-success">
-                        Doce cadastrado com sucesso!
-                    </div>
-                `
+            document.getElementById("nome").focus();
 
-                form.reset()
+        },
 
-            } catch (erro) {
-                mensagem.innerHTML = `
-                    <div class="alert alert-danger">
-                        ${erro.message}
-                    </div>
-                `
-            }
-        })
-    </script>
+        "Cadastrar"
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    );
+
+});
+
+</script>
 
 </body>
 
