@@ -104,7 +104,7 @@ body {
 
 .btn-custom {
     background-color: #f4d4d4;
-    color: #7b3b11;
+    color: #ffffff;
     border: none;
     border-radius: 10px;
     padding: 12px 18px;
@@ -225,4 +225,147 @@ body {
     .titulo {
         font-size: 2.6rem;
     }
+}
+
+
+/* testando login */
+body {
+    background: linear-gradient(135deg, #fff5f7, #f4f4f4);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: #2b2b2b;
+}
+
+.login-container {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 32px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(211, 107, 139, 0.1);
+}
+
+.titulo {
+    font-weight: 700;
+    color: #7b3b11;
+    letter-spacing: -0.5px;
+}
+
+.form-control {
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid #eee;
+    transition: 0.2s;
+}
+
+.form-control:focus {
+    border-color: #d36b8b;
+    box-shadow: 0 0 0 3px rgba(211, 107, 139, 0.15);
+}
+
+.btn-custom {
+    background: #d36b8b;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-custom:hover {
+    background: #c05578;
+    transform: translateY(-1px);
+}
+
+a {
+    color: #d36b8b;
+    font-weight: 500;
+}
+
+a:hover {
+    color: #b84f70;
+}
+
+.bg-rosa {
+    background: #d36b8b;
+    color: #fff !important;
+}
+
+.search-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid #f4d4d4;
+    border-radius: 14px;
+    padding: 10px 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: 0.2s;
+}
+
+.search-wrapper:focus-within {
+    border-color: #7b3b11;
+    box-shadow: 0 0 0 3px rgba(244, 212, 212, 0.4);
+}
+
+.search-icon {
+    color: #7b3b11;
+    font-size: 1.2rem;
+}
+
+.search-input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 1rem;
+    background: transparent;
+    color: #7b3b11;
+}
+
+.search-input::placeholder {
+    color: #b88a7a;
+}
+
+.search-modern {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #e8c2c2;
+    border-radius: 14px;
+    padding: 10px 14px;
+    gap: 10px;
+    transition: 0.2s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.search-modern:hover {
+    border-color: #f4d4d4;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+.search-modern input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 0.95rem;
+    background: transparent;
+}
+
+.search-icon {
+    font-size: 1.2rem;
+    color: #7b3b11;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.search-icon:hover {
+    color: #5c2b0d;
+    transform: scale(1.1);
 }

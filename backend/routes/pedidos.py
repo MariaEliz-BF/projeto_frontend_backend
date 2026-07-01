@@ -134,6 +134,16 @@ def deletar_pedido(
             detail="Pedido não encontrado"
         )
 
+    # Devolve os produtos ao estoque
+    for item in pedido.itens:
+
+        doce = db.query(Doce).filter(
+            Doce.id == item.doce_id
+        ).first()
+
+        if doce:
+            doce.quantidade += item.quantidade
+
     db.delete(pedido)
 
     db.commit()
@@ -167,11 +177,49 @@ def atualizar_pedido(
 
     if pedido.itens is not None:
 
+        # devolve o estoque dos itens antigos
+        itens_antigos = db.query(ItemPedido).filter(
+            ItemPedido.pedido_id == pedido_id
+        ).all()
+
+        for item in itens_antigos:
+
+            doce = db.query(Doce).filter(
+                Doce.id == item.doce_id
+            ).first()
+
+            if doce:
+                doce.quantidade += item.quantidade
+
+        # remove itens antigos
         db.query(ItemPedido).filter(
             ItemPedido.pedido_id == pedido_id
         ).delete(synchronize_session=False)
 
+        valor_total = 0
+
+        # adiciona os novos
         for item in pedido.itens:
+
+            doce = db.query(Doce).filter(
+                Doce.id == item.doce_id
+            ).first()
+
+            if doce is None:
+                raise HTTPException(
+                    status_code=404,
+                    detail="Doce não encontrado"
+                )
+
+            if doce.quantidade < item.quantidade:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Estoque insuficiente para {doce.nome}"
+                )
+
+            doce.quantidade -= item.quantidade
+
+            valor_total += doce.preco * item.quantidade
 
             novo_item = ItemPedido(
                 pedido_id=pedido_id,
@@ -181,13 +229,20 @@ def atualizar_pedido(
 
             db.add(novo_item)
 
+        pedido_db.valor_total = valor_total
+
     db.commit()
     db.refresh(pedido_db)
 
     return pedido_db
 
 @router.put("/{pedido_id}/substituir")
-def substituir_pedido(pedido_id: int, pedido: PedidoCreate, db: Session = Depends(get_db)):
+def substituir_pedido(
+    pedido_id: int,
+    pedido: PedidoCreate,
+    db: Session = Depends(get_db)
+):
+
     pedido_db = db.query(Pedido).filter(
         Pedido.id == pedido_id
     ).first()
@@ -198,24 +253,64 @@ def substituir_pedido(pedido_id: int, pedido: PedidoCreate, db: Session = Depend
             detail="Pedido não encontrado"
         )
 
-    # Atualiza os campos do pedido
     pedido_db.cliente = pedido.cliente
     pedido_db.data = pedido.data
 
+    # Devolve o estoque dos itens antigos
+    itens_antigos = db.query(ItemPedido).filter(
+        ItemPedido.pedido_id == pedido_id
+    ).all()
+
+    for item in itens_antigos:
+
+        doce = db.query(Doce).filter(
+            Doce.id == item.doce_id
+        ).first()
+
+        if doce:
+            doce.quantidade += item.quantidade
+
     # Remove os itens antigos
-    db.query(ItemPedido).filter(ItemPedido.pedido_id == pedido_id).delete(synchronize_session=False)
+    db.query(ItemPedido).filter(
+        ItemPedido.pedido_id == pedido_id
+    ).delete(synchronize_session=False)
+
+    valor_total = 0
 
     # Adiciona os novos itens
     for item in pedido.itens:
+
+        doce = db.query(Doce).filter(
+            Doce.id == item.doce_id
+        ).first()
+
+        if doce is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Doce não encontrado"
+            )
+
+        if doce.quantidade < item.quantidade:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Estoque insuficiente para {doce.nome}"
+            )
+
+        doce.quantidade -= item.quantidade
+
+        valor_total += doce.preco * item.quantidade
+
         novo_item = ItemPedido(
             pedido_id=pedido_id,
             doce_id=item.doce_id,
             quantidade=item.quantidade
         )
+
         db.add(novo_item)
+
+    pedido_db.valor_total = valor_total
 
     db.commit()
     db.refresh(pedido_db)
 
     return pedido_db
-

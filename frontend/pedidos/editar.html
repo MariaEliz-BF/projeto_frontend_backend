@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doceria - Editar Pedido</title>
+    <title>Doces da Mel | Editar Pedido</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
@@ -13,24 +13,42 @@
 
 <body>
 
+    <!-- NAVBAR -->
     <nav class="navbar">
+
         <div class="container d-flex justify-content-between align-items-center">
-            <a class="navbar-brand" href="../index.html">Doceria</a>
+
+            <a class="navbar-brand" href="../index.html">
+                Doces da Mel
+            </a>
 
             <div class="usuario-area">
+
                 <span id="usuarioLogado" class="usuario-logado"></span>
 
-                <button class="btn usuario-btn" onclick="sair()" title="Sair">
+                <button
+                    class="btn usuario-btn"
+                    onclick="sair()"
+                    title="Sair">
+
                     <i class="bi bi-person-circle"></i>
+
                 </button>
+
             </div>
+
         </div>
+
     </nav>
+
+    <!-- CONTEÚDO -->
     <main class="container mt-5">
 
         <div class="card-custom">
 
-            <h1 class="titulo mb-3">Editar Pedido</h1>
+            <h1 class="titulo mb-3">
+                Editar Pedido
+            </h1>
 
             <p class="mb-4">
                 Atualize os dados do pedido e as quantidades dos doces.
@@ -41,46 +59,77 @@
             <form id="formPedido">
 
                 <div class="mb-4">
-                    <label for="cliente" class="form-label">Nome do cliente</label>
+
+                    <label class="form-label">
+                        Nome do cliente
+                    </label>
+
                     <input
                         type="text"
                         id="cliente"
                         class="form-control"
                         required>
+
                 </div>
 
                 <div class="mb-4">
-                    <label for="data" class="form-label">Data do pedido</label>
+
+                    <label class="form-label">
+                        Data do pedido
+                    </label>
+
                     <input
                         type="date"
                         id="data"
                         class="form-control"
                         required>
+
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label">Doces do pedido</label>
+
+                    <label class="form-label">
+                        Doces do pedido
+                    </label>
 
                     <div id="lista-produtos">
+
                         <div class="alert alert-info">
-                            Carregando informações...
+                            Carregando produtos...
                         </div>
+
                     </div>
+
                 </div>
 
                 <div class="mb-4 p-3 rounded total-box">
-                    <strong>Prévia do total:</strong>
-                    <span id="valorTotal">R$ 0,00</span>
+
+                    <strong>Total do pedido:</strong>
+
+                    <span id="valorTotal">
+                        R$ 0,00
+                    </span>
+
                 </div>
 
                 <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-custom">
+
+                    <button
+                        type="submit"
+                        class="btn btn-custom">
+
                         Salvar Alterações
+
                     </button>
 
-                    <a href="index.html" class="btn btn-secondary">
+                    <a
+                        href="index.html"
+                        class="btn btn-secondary">
+
                         Cancelar
+
                     </a>
+
                 </div>
 
             </form>
@@ -89,257 +138,15 @@
 
     </main>
 
-    <script>
-        const API_URL = "http://127.0.0.1:8000"
-
-        const token = localStorage.getItem("token")
-        const usuario = localStorage.getItem("usuario")
-
-        if (!token) {
-            window.location.href = "../login.html"
-        }
-
-        const usuarioLogado = document.getElementById("usuarioLogado")
-
-        if (usuario) {
-            usuarioLogado.textContent = `Logado como: ${usuario}`
-        } else {
-            usuarioLogado.textContent = "Usuário não identificado"
-        }
-
-        function sair() {
-            localStorage.removeItem("token")
-            localStorage.removeItem("usuario")
-            window.location.href = "../login.html"
-        }
-
-        const params = new URLSearchParams(window.location.search)
-        const pedidoId = params.get("id")
-
-        const formPedido = document.getElementById("formPedido")
-        const mensagem = document.getElementById("mensagem")
-        const listaProdutos = document.getElementById("lista-produtos")
-        const valorTotal = document.getElementById("valorTotal")
-
-        const campoCliente = document.getElementById("cliente")
-        const campoData = document.getElementById("data")
-
-        let pedidoAtual = null
-        let doces = []
-
-        function formatarPreco(valor) {
-            return Number(valor).toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL"
-            })
-        }
-
-        async function carregarDados() {
-            if (!pedidoId) {
-                mensagem.innerHTML = `
-                    <div class="alert alert-danger">
-                        Pedido não encontrado. Volte para a listagem e tente novamente.
-                    </div>
-                `
-                formPedido.style.display = "none"
-                return
-            }
-
-            try {
-                const respostaPedido = await fetch(`${API_URL}/pedidos/${pedidoId}`)
-
-                if (!respostaPedido.ok) {
-                    const erro = await respostaPedido.json()
-                    throw new Error(erro.detail || "Erro ao buscar pedido")
-                }
-
-                pedidoAtual = await respostaPedido.json()
-
-                const respostaDoces = await fetch(`${API_URL}/doces/`)
-
-                if (!respostaDoces.ok) {
-                    throw new Error("Erro ao buscar doces")
-                }
-
-                doces = await respostaDoces.json()
-
-                preencherFormulario()
-                renderizarDoces()
-
-            } catch (erro) {
-                mensagem.innerHTML = `
-                    <div class="alert alert-danger">
-                        ${erro.message}
-                    </div>
-                `
-                formPedido.style.display = "none"
-            }
-        }
-
-        function preencherFormulario() {
-            campoCliente.value = pedidoAtual.cliente
-            campoData.value = pedidoAtual.data
-        }
-
-        function buscarQuantidadeDoItem(doceId) {
-            const itemEncontrado = pedidoAtual.itens.find(item => {
-                return item.doce.id === doceId
-            })
-
-            if (itemEncontrado) {
-                return itemEncontrado.quantidade
-            }
-
-            return 0
-        }
-
-        function renderizarDoces() {
-            listaProdutos.innerHTML = ""
-
-            if (!doces || doces.length === 0) {
-                listaProdutos.innerHTML = `
-                    <div class="alert alert-warning">
-                        Nenhum doce cadastrado no sistema.
-                    </div>
-                `
-                return
-            }
-
-            doces.forEach(doce => {
-                const quantidadeAtual = buscarQuantidadeDoItem(doce.id)
-
-                listaProdutos.innerHTML += `
-                    <div class="produto-item mb-3 p-3 rounded">
-                        <div class="row align-items-center">
-
-                            <div class="col-md-7">
-                                <strong>${doce.nome}</strong>
-
-                                <div class="text-muted small">
-                                    ID: ${doce.id} |
-                                    ${formatarPreco(doce.preco)} |
-                                    Estoque atual: ${doce.quantidade}
-                                </div>
-                            </div>
-
-                            <div class="col-md-5 mt-2 mt-md-0">
-                                <label class="form-label small mb-1">
-                                    Quantidade
-                                </label>
-
-                                <input
-                                    type="number"
-                                    class="form-control quantidade-produto"
-                                    min="0"
-                                    value="${quantidadeAtual}"
-                                    data-id="${doce.id}"
-                                    data-preco="${doce.preco}">
-                            </div>
-
-                        </div>
-                    </div>
-                `
-            })
-
-            adicionarEventosQuantidade()
-            calcularTotal()
-        }
-
-        function adicionarEventosQuantidade() {
-            const quantidades = document.querySelectorAll(".quantidade-produto")
-
-            quantidades.forEach(input => {
-                input.addEventListener("input", function () {
-                    if (Number(this.value) < 0) {
-                        this.value = 0
-                    }
-
-                    calcularTotal()
-                })
-            })
-        }
-
-        function calcularTotal() {
-            let total = 0
-
-            const quantidades = document.querySelectorAll(".quantidade-produto")
-
-            quantidades.forEach(input => {
-                const preco = Number(input.dataset.preco)
-                const quantidade = Number(input.value)
-
-                if (quantidade > 0) {
-                    total += preco * quantidade
-                }
-            })
-
-            valorTotal.textContent = formatarPreco(total)
-        }
-
-        formPedido.addEventListener("submit", async function (e) {
-            e.preventDefault()
-
-            const cliente = campoCliente.value.trim()
-            const data = campoData.value
-
-            const quantidades = document.querySelectorAll(".quantidade-produto")
-
-            const itens = Array.from(quantidades)
-                .filter(input => Number(input.value) > 0)
-                .map(input => {
-                    return {
-                        doce_id: Number(input.dataset.id),
-                        quantidade: Number(input.value)
-                    }
-                })
-
-            if (itens.length === 0) {
-                mensagem.innerHTML = `
-                    <div class="alert alert-warning">
-                        O pedido precisa ter pelo menos um doce.
-                    </div>
-                `
-                return
-            }
-
-            try {
-                const resposta = await fetch(`${API_URL}/pedidos/${pedidoId}/substituir`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        cliente,
-                        data,
-                        itens
-                    })
-                })
-
-                if (!resposta.ok) {
-                    const erro = await resposta.json()
-                    throw new Error(erro.detail || "Erro ao atualizar pedido")
-                }
-
-                mensagem.innerHTML = `
-                    <div class="alert alert-success">
-                        Pedido atualizado com sucesso!
-                    </div>
-                `
-
-            } catch (erro) {
-                mensagem.innerHTML = `
-                    <div class="alert alert-danger">
-                        ${erro.message}
-                    </div>
-                `
-            }
-        })
-
-        carregarDados()
-    </script>
-
+    <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Scripts do projeto -->
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/pedido-editar.js"></script>
 
 </body>
 

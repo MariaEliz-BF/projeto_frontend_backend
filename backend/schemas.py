@@ -83,6 +83,7 @@ class LoginRequest(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str
+    tipo: str #juliana aqui, edição para verificar  o tipo de usuario
 
 class UsuarioCreate(BaseModel):
     nome: str

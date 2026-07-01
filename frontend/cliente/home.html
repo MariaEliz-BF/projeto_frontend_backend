@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Doces da Mel | Área do Cliente</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+
+        <div class="container d-flex justify-content-between align-items-center">
+
+            <a class="navbar-brand" href="home.html">
+                Doces da Mel
+            </a>
+
+            <div class="usuario-area">
+
+                <span id="usuarioLogado" class="usuario-logado"></span>
+
+                <button
+                    class="btn usuario-btn"
+                    id="btnLogout"
+                    title="Sair">
+
+                    <i class="bi bi-box-arrow-right"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+    <!-- CONTEÚDO -->
+    <main class="container mt-5">
+
+        <div class="card-custom">
+
+            <div class="mb-5">
+
+                <h1 class="titulo">
+                    Bem-vindo!
+                </h1>
+
+                <p class="mb-0">
+                    Escolha uma das opções abaixo.
+                </p>
+
+            </div>
+
+            <div class="row g-4">
+
+                <!-- NOVO PEDIDO -->
+
+                <div class="col-md-6">
+
+                    <div class="total-box p-4 h-100 rounded">
+
+                        <div class="mb-3">
+
+                            <i class="bi bi-cart-plus fs-1"></i>
+
+                        </div>
+
+                        <h4>
+                            Fazer Pedido
+                        </h4>
+
+                        <p class="text-muted">
+
+                            Monte seu pedido escolhendo os doces disponíveis.
+
+                        </p>
+
+                        <a
+                            href="/frontend/cliente/pedidos.html"
+                            class="btn btn-custom w-100">
+
+                            Fazer Pedido
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <!-- HISTÓRICO -->
+
+                <div class="col-md-6">
+
+                    <div class="total-box p-4 h-100 rounded">
+
+                        <div class="mb-3">
+
+                            <i class="bi bi-bag-check fs-1"></i>
+
+                        </div>
+
+                        <h4>
+                            Meus Pedidos
+                        </h4>
+
+                        <p class="text-muted">
+
+                            Consulte todos os pedidos realizados com sua conta.
+
+                        </p>
+
+                        <a
+                            href="meus-pedidos.html"
+                            class="btn btn-custom w-100">
+
+                            Ver Pedidos
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/auth.js"></script>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+            protegerPagina();
+
+            mostrarUsuario();
+
+            document
+                .getElementById("btnLogout")
+                .addEventListener("click", sair);
+
+        });
+
+    </script>
+
+</body>
+
+</html>
