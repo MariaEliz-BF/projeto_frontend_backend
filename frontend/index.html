@@ -23,8 +23,6 @@
 
             <div class="usuario-area">
 
-                <span id="usuarioLogado" class="usuario-logado"></span>
-
                 <button class="btn usuario-btn"
                         onclick="sair()"
                         title="Sair">
@@ -135,26 +133,17 @@
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <!-- Scripts do sistema -->
-    <script src="js/app.js"></script>
-    <script src="js/api.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/auth.js"></script>
+        <script src="js/config.js"></script>
+        <script src="js/api.js"></script>
+        <script src="js/auth.js"></script>
+        <script src="js/ui.js"></script>
+        <script src="js/login.js"></script>
 
-    <script>
-
-        // Protege a página
-        protegerPagina();
-
-        // Exibe o usuário logado
-        const usuarioLogado = document.getElementById("usuarioLogado");
-        const usuario = obterUsuario();
-
-        usuarioLogado.textContent = usuario
-            ? `Bem-vindo(a), ${usuario}`
-            : "Nenhum usuário logado";
-
-    </script>
-
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                protegerPagina('admin'); // Apenas admin pode ver esta página
+            });
+        </script>
 </body>
 
 </html>

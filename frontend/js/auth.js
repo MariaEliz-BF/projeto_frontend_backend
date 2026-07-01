@@ -1,71 +1,86 @@
-// ==========================================
-// AUTH - Autenticação
-// ==========================================
+function realizarLogin(email, senha) {
 
-
-// ==========================================
-// LOGIN
-// ==========================================
-
-async function realizarLogin(email, senha) {
-
-    const resposta = await api.post("/auth/login", {
+    return api.post("/auth/login", {
         email,
         senha
     });
 
-    if (!resposta.ok) {
+}
 
-        switch (resposta.status) {
+function salvarSessao(dados, email) {
 
-            case 401:
-                mostrarToast("E-mail ou senha inválidos.", "erro");
-                break;
-
-            default:
-                mostrarToast(
-                    resposta.data?.detail || "Erro ao realizar login.",
-                    "erro"
-                );
-
-        }
-
-        return false;
-
-    }
-
-    salvarToken(resposta.data.access_token);
-
-    // Enquanto o backend não retorna o nome,
-    // salvamos o e-mail.
-    salvarUsuario(email);
-
-    mostrarToast("Login realizado com sucesso!");
-
-    setTimeout(() => {
-
-        window.location.href = "index.html";
-
-    }, 2000);
-
-    return true;
+    localStorage.setItem("token", dados.access_token);
+    localStorage.setItem("tipo", dados.tipo);
+    localStorage.setItem("usuario", email);
 
 }
 
+function obterToken() {
+    return localStorage.getItem("token");
+}
 
+function obterUsuario() {
+    return localStorage.getItem("usuario");
+}
 
-// ==========================================
-// CADASTRO
-// ==========================================
+function obterTipoUsuario() {
+    return localStorage.getItem("tipo");
+}
 
-async function cadastrarUsuario(nome, email, senha, confirmarSenha) {
+function usuarioLogado() {
+    return obterToken() !== null;
+}
 
-    if (!nome || !email || !senha || !confirmarSenha) {
+function protegerPagina(tipoEsperado = null) {
 
-        mostrarToast("Preencha todos os campos.", "erro");
-        return false;
+    const token = obterToken();
+
+    if (!token) {
+
+        window.location.href = "../login.html";
+        return;
 
     }
+
+    if (tipoEsperado) {
+
+        const tipo = obterTipoUsuario();
+
+        if (tipo !== tipoEsperado) {
+
+            alert("Você não tem permissão para acessar esta página.");
+
+            if (tipo === "admin") {
+
+                window.location.href = "../index.html";
+
+            } else {
+
+                window.location.href = "../cliente/home.html";
+
+            }
+
+        }
+
+    }
+
+}
+
+function mostrarUsuario() {
+
+    const span = document.getElementById("usuarioLogado");
+
+    if (!span) return;
+
+    const usuario = obterUsuario();
+
+    if (!usuario) return;
+
+    span.textContent = usuario.replace("@", " • ").split(" • ")[0];
+
+}
+
+async function cadastrarUsuario(nome, email, senha, confirmarSenha) {
 
     if (senha !== confirmarSenha) {
 
@@ -74,125 +89,42 @@ async function cadastrarUsuario(nome, email, senha, confirmarSenha) {
 
     }
 
-    const usuario = {
+    const resposta = await api.post("/auth/usuarios", {
         nome,
         email,
         senha,
         tipo: "usuario"
-    };
+    });
 
-    const resposta = await api.post(
-        "/auth/usuarios",
-        usuario
-    );
+    if (!resposta.ok) {
 
-    if (resposta.ok) {
+        console.error("Erro do backend:", resposta);
 
         mostrarToast(
-            "Cadastro realizado com sucesso! Redirecionando para o login..."
+            resposta.data?.detail || "Erro ao criar conta.",
+            "erro"
         );
 
-        setTimeout(() => {
-
-            window.location.href = "login.html";
-
-        }, 3000);
-
-        return true;
+        return false;
 
     }
 
-    switch (resposta.status) {
+    mostrarToast("Conta criada com sucesso!", "sucesso");
 
-        case 409:
+    setTimeout(() => {
+        window.location.href = "login.html";
+    }, 1500);
 
-            mostrarToast(
-                "Este e-mail já está cadastrado.",
-                "erro"
-            );
-
-            break;
-
-        case 422:
-
-            mostrarToast(
-                "Verifique os dados informados.",
-                "erro"
-            );
-
-            break;
-
-        default:
-
-            mostrarToast(
-                resposta.data?.detail ||
-                "Erro ao cadastrar.",
-                "erro"
-            );
-
-    }
-
-    return false;
+    return true;
 
 }
-
-
-
-// ==========================================
-// VERIFICAÇÃO DE LOGIN
-// ==========================================
-
-function usuarioEstaLogado() {
-
-    return obterToken() !== null;
-
-}
-
-
-
-// ==========================================
-// PROTEGER PÁGINAS
-// ==========================================
-
-function protegerPagina() {
-
-    if (!usuarioEstaLogado()) {
-
-        mostrarToast(
-            "Faça login para acessar esta página.",
-            "aviso"
-        );
-
-        setTimeout(() => {
-
-            window.location.href = "login.html";
-
-        }, 1200);
-
-    }
-
-}
-
-
-
-// ==========================================
-// LOGOUT
-// ==========================================
 
 function sair() {
 
-    confirmarAcao(
+    localStorage.removeItem("token");
+    localStorage.removeItem("tipo");
+    localStorage.removeItem("usuario");
 
-        "Encerrar sessão",
-
-        "Deseja realmente sair da sua conta?",
-
-        () => {
-
-            logout();
-
-        }
-
-    );
+    window.location.href = "http://127.0.0.1:5500/frontend/login.html";
 
 }

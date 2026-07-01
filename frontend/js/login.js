@@ -1,39 +1,48 @@
-const formulario = document.getElementById("formLogin");
+document.addEventListener("DOMContentLoaded", () => {
 
-formulario.addEventListener("submit", async (event) => {
+    const form = document.getElementById("formLogin");
 
-    event.preventDefault();
+    if (!form) return;
 
-    const botao = formulario.querySelector("button[type='submit']");
+    form.addEventListener("submit", async (e) => {
 
-    const email = document.getElementById("email").value.trim();
-    const senha = document.getElementById("senha").value;
+        e.preventDefault();
 
-    if (!email || !senha) {
+        const email = document
+            .getElementById("email")
+            .value
+            .trim()
+            .toLowerCase();
 
-        mostrarToast("Preencha e-mail e senha.", "erro");
-        return;
+        const senha = document
+            .getElementById("senha")
+            .value;
 
-    }
+        const resposta = await realizarLogin(email, senha);
 
-    botao.disabled = true;
+        if (!resposta.ok) {
 
-    const textoOriginal = botao.innerHTML;
+            mostrarToast(
+                resposta.data?.detail || "Email ou senha inválidos.",
+                "erro"
+            );
 
-    botao.innerHTML = `
-        <span class="spinner-border spinner-border-sm me-2"></span>
-        Entrando...
-    `;
+            return;
 
-    try {
+        }
 
-        await realizarLogin(email, senha);
+        salvarSessao(resposta.data, email);
 
-    } finally {
+        if (resposta.data.tipo === "admin") {
 
-        botao.disabled = false;
-        botao.innerHTML = textoOriginal;
+            window.location.href = "index.html";
 
-    }
+        } else {
+
+            window.location.href = "cliente/home.html";
+
+        }
+
+    });
 
 });

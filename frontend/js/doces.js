@@ -26,12 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
 // ==========================================
 
 function inicializarComponentes() {
-
     tabela = document.getElementById("tabela-doces");
     campoBusca = document.getElementById("campoBusca");
-    formCriar = document.getElementById("formCriarDoce");
-    formEditar = document.getElementById("formEditarDoce");
-
+    formCriar = document.getElementById("formDoce"); 
+    formEditar = document.getElementById("formDoce");
 }
 
 
