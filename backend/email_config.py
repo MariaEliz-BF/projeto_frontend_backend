@@ -4,9 +4,9 @@ from pydantic import EmailStr
 from fastapi_mail import ConnectionConfig
 
 conf = ConnectionConfig(
-    MAIL_USERNAME="mariaeliz.farias@upe.br",
-    MAIL_PASSWORD="1234babY@#",
-    MAIL_FROM="mariaeliz.farias@upe.br",
+    MAIL_USERNAME="doceria097@gmail.com",
+    MAIL_PASSWORD="pyem lizv svjq rszu",
+    MAIL_FROM="doceria097@gmail.com",
     MAIL_PORT=587,
     MAIL_SERVER="smtp.gmail.com",
     MAIL_STARTTLS=True,
