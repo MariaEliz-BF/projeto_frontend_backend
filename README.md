@@ -1,437 +1,96 @@
-# 🍰 Doceria Delivery
+🍰 Doceria Delivery
+Sistema web para gerenciamento de uma doceria, desenvolvido com frontend e backend integrados. O projeto permite o gerenciamento completo de doces e pedidos, com autenticação segura via JWT.
 
-Sistema web simples para gerenciamento de uma doceria, desenvolvido com frontend e backend integrados.
+🚀 Acesso ao Projeto
+Frontend (Produção): https://projetofrontendbackend.netlify.app/login.html
 
-O projeto permite cadastrar doces, registrar pedidos, visualizar vendas, gerenciar os dados salvos no sistema e utilizar autenticação básica com token JWT.
+Backend: (Insira aqui a URL pública do seu serviço de backend, ex: Render, Railway, etc.)
 
-* FastAPI
-* SQLAlchemy
-* SQLite
-* HTML
-* CSS
-* JavaScript
-* Bootstrap
+📌 Objetivo
+Simular um sistema de vendas para uma doceria, com foco em:
 
----
+Gerenciamento de estoque (CRUD de doces);
 
-## 📌 Objetivo
+Gestão de vendas (CRUD de pedidos);
 
-O objetivo do projeto é simular um sistema básico de vendas para uma doceria, permitindo:
+Cálculo automático de valores totais;
 
-* cadastrar doces;
-* listar doces cadastrados;
-* editar doces;
-* excluir doces;
-* criar pedidos;
-* listar pedidos;
-* editar pedidos;
-* excluir pedidos;
-* calcular o valor total dos pedidos;
-* exibir os doces relacionados a cada pedido;
-* integrar frontend e backend;
-* realizar login com autenticação JWT;
-* proteger páginas internas sem login;
-* enviar token nas ações de criar, editar e excluir.
+Autenticação e proteção de rotas via JWT;
 
----
+Integração entre interface (SPA) e API REST.
 
-## 👩‍💻 Tecnologias Utilizadas
+👩‍💻 Tecnologias Utilizadas
+Backend
+Framework: FastAPI
 
-### Backend
+ORM: SQLAlchemy
 
-* FastAPI
-* SQLAlchemy
-* SQLite
-* Pydantic
-* Uvicorn
-* Python-Jose
+Banco de Dados: SQLite
 
-### Frontend
+Autenticação: JWT (Python-Jose)
 
-* HTML5
-* CSS3
-* JavaScript
-* Bootstrap 5
-* Bootstrap Icons
+Validacão: Pydantic
 
----
+Frontend
+Estrutura: HTML5, CSS3, JavaScript
 
-## 🎨 Padrão Visual
+Interface: Bootstrap 5 & Bootstrap Icons
 
-### Fontes
+UX: Toastify (Notificações)
 
-* Destaque: Dancing Script
-* Principal: Noto Serif
-
-### Cores
-
-| Elemento        | Cor       |
-| --------------- | --------- |
-| Fundo           | `#f4f4f4` |
-| Destaques       | `#f4d4d4` |
-| Texto principal | `#7b3b11` |
-
----
-
-## 📂 Estrutura do Projeto
-
-```txt
+🔗 Estrutura do Projeto
+Plaintext
 projeto_frontend_backend/
-│
-├── backend/
-│   ├── routes/
-│   │   ├── doces.py
-│   │   ├── pedidos.py
-│   │   └── usuario.py
-│   │
-│   ├── auth.py
-│   ├── main.py
-│   ├── models.py
-│   ├── schemas.py
-│   ├── database.py
-│   ├── crud.py
-│   └── banco.db
-│
-├── frontend/
-│   ├── index.html
-│   ├── login.html
-│   ├── style.css
-│   │
-│   ├── doces/
-│   │   ├── index.html
-│   │   ├── criar.html
-│   │   └── editar.html
-│   │
-│   └── pedidos/
-│       ├── index.html
-│       ├── criar.html
-│       └── editar.html
-│
-└── README.md
-```
-
----
-
-## ⚙️ Como Executar o Projeto
-
-### 1. Clonar o repositório
-
-```bash
-git clone https://github.com/MariaEliz-BF/projeto_frontend_backend.git
-```
-
----
-
-### 2. Entrar na pasta do backend
-
-```bash
-cd projeto_frontend_backend/backend
-```
-
----
-
-### 3. Criar ambiente virtual
-
-```bash
+├── backend/            # API FastAPI (Rotas, Auth, DB)
+└── frontend/           # Interface (Login, Doces, Pedidos)
+⚙️ Como Executar Localmente
+1. Backend
+Bash
+cd backend
 python -m venv venv
-```
-
----
-
-### 4. Ativar ambiente virtual
-
-Windows PowerShell:
-
-```bash
-.\venv\Scripts\Activate.ps1
-```
-
-Caso o PowerShell bloqueie a ativação:
-
-```bash
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-```
-
-Depois tente novamente:
-
-```bash
-.\venv\Scripts\Activate.ps1
-```
-
----
-
-### 5. Instalar dependências
-
-```bash
+# Ativação: .\venv\Scripts\Activate.ps1 (Windows)
 pip install fastapi uvicorn sqlalchemy pydantic python-jose
-```
-
----
-
-### 6. Rodar a API
-
-```bash
 python -m uvicorn main:app --reload
-```
+Swagger/API Docs: http://127.0.0.1:8000/docs
 
-Ou:
+2. Frontend
+Abra o arquivo frontend/login.html utilizando a extensão Live Server do VS Code ou um servidor local.
 
-```bash
-.\venv\Scripts\python.exe -m uvicorn main:app --reload
-```
+🔐 Autenticação e Segurança
+Hash de Senhas: Utilização de bcrypt para armazenamento seguro.
 
----
+Proteção de Rotas: Acesso às telas internas bloqueado sem token JWT válido.
 
-## 📚 Swagger da API
+Credenciais de Teste:
 
-Após iniciar a API:
-
-```txt
-http://127.0.0.1:8000/docs
-```
-
----
-
-## 🛍️ Frontend
-
-Abrir com Live Server:
-
-```txt
-frontend/login.html
-```
-
-Ou:
-
-```txt
-http://127.0.0.1:5500/frontend/login.html
-```
-
-Após o login, o sistema redireciona para:
-
-```txt
-frontend/index.html
-```
-
----
-
-## 🔐 Usuário de Teste
-
-```txt
 E-mail: admin@email.com
+
 Senha: 123456
-```
 
----
+🛠️ Funcionalidades Implementadas
+Doces
+Listagem, busca por nome/ID, cadastro, edição e exclusão.
 
-## 📌 Funcionalidades
+Rotas: GET, POST, PUT, DELETE em /doces/.
 
-### Doces
+Pedidos
+Listagem paginada (10 itens/página), busca por ID, criação, edição e exclusão.
 
-* Listar doces cadastrados;
-* Buscar doces por nome;
-* Buscar doces por ID no frontend;
-* Cadastrar novo doce;
-* Editar doce existente;
-* Excluir doce;
-* Exibir preço formatado em reais;
-* Proteger páginas internas sem login;
-* Enviar token nas ações de criar, editar e excluir.
+Exibição de valor total e relacionamento com doces.
 
-Rotas utilizadas:
+Rotas: GET, POST, PUT, DELETE em /pedidos/.
 
-```txt
-GET    /doces/
-GET    /doces/?nome=
-GET    /doces/{doce_id}
-POST   /doces/
-PUT    /doces/{doce_id}/substituir
-DELETE /doces/{doce_id}
-```
+Integração
+Uso de fetch para consumo da API.
 
----
+Cabeçalho Authorization: Bearer <token> enviado em requisições protegidas.
 
-### Pedidos
+Uso de localStorage para persistência do token.
 
-* Listar pedidos cadastrados;
-* Paginar pedidos de 10 em 10;
-* Buscar pedido por ID;
-* Criar novo pedido;
-* Editar pedido existente;
-* Excluir pedido;
-* Exibir doces relacionados ao pedido;
-* Exibir data no formato brasileiro;
-* Exibir valor total do pedido;
-* Mostrar mensagem para pedidos sem itens;
-* Proteger páginas internas sem login;
-* Enviar token nas ações de criar, editar e excluir.
+👥 Integrantes
+Juliana Gonçalves
 
-Rotas utilizadas:
+Maria Eliz
 
-```txt
-GET    /pedidos/?page=1&limit=10
-GET    /pedidos/{pedido_id}
-POST   /pedidos/
-PUT    /pedidos/{pedido_id}/substituir
-DELETE /pedidos/{pedido_id}
-```
-
----
-
-## 🔗 Integração Frontend + Backend
-
-O frontend consome a API utilizando `fetch`.
-
-Exemplo:
-
-```js
-fetch("http://127.0.0.1:8000/doces/")
-```
-
-Exemplo de requisição protegida com token:
-
-```js
-fetch("http://127.0.0.1:8000/pedidos/", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-    },
-    body: JSON.stringify({
-        cliente,
-        data,
-        itens
-    })
-})
-```
-
----
-
-## 🔐 Autenticação
-
-O projeto possui autenticação básica com JWT.
-
-O fluxo funciona da seguinte forma:
-
-* O usuário acessa `login.html`;
-* O frontend envia e-mail e senha para `/auth/login`;
-* O backend valida as credenciais;
-* Se estiver correto, retorna um token JWT;
-* O frontend armazena o token no `localStorage`;
-* O token é enviado no cabeçalho `Authorization` nas requisições protegidas;
-* As páginas internas verificam se há token;
-* Se não houver token, o usuário é redirecionado para `login.html`;
-* O botão de sair remove o token e o usuário do `localStorage`.
-
-Rota de login:
-
-```txt
-POST /auth/login
-```
-
-Exemplo de corpo da requisição:
-
-```json
-{
-  "email": "admin@email.com",
-  "senha": "123456"
-}
-```
-
-Resposta esperada:
-
-```json
-{
-  "access_token": "token_jwt",
-  "token_type": "bearer"
-}
-```
-
----
-
-## 🧾 Relacionamento entre Entidades
-
-O sistema possui relacionamento entre pedidos e doces por meio da tabela de itens do pedido.
-
-Estrutura simplificada:
-
-```txt
-Pedido
-  └── ItemPedido
-        └── Doce
-```
-
-Cada pedido pode possuir vários itens, e cada item está associado a um doce.
-
-Na resposta da API, os pedidos retornam os doces relacionados embutidos nos itens.
-
----
-
-## 📄 Paginação
-
-A listagem de pedidos possui paginação.
-
-Exemplo:
-
-```txt
-GET /pedidos/?page=1&limit=10
-```
-
-Resposta esperada:
-
-```json
-{
-  "data": [],
-  "total": 25,
-  "page": 1,
-  "limit": 10,
-  "pages": 3
-}
-```
-
-No frontend, a página de pedidos exibe:
-
-* Botão Anterior;
-* Botão Próximo;
-* Informação da página atual;
-* Botões desativados nos extremos.
-
----
-
-## 🔎 Busca
-
-### Busca de doces
-
-O backend permite buscar doces por nome:
-
-```txt
-GET /doces/?nome=brig
-```
-
-O frontend também permite buscar por ID usando:
-
-```txt
-GET /doces/{doce_id}
-```
-
-### Busca de pedidos
-
-Atualmente o frontend permite buscar pedidos por ID:
-
-```txt
-GET /pedidos/{pedido_id}
-```
-
-Busca de pedidos por cliente ou data ainda pode ser implementada no backend.
-
----
-
-## 👥 Integrantes
-
-* Juliana Gonçalves
-* Maria Eliz
-
----
-
-## 🚧 Status do Projeto
-
-Projeto em desenvolvimento para a Sprint 2 da disciplina de Programação Web.
+🚧 Status do Projeto
+Projeto finalizado (Sprint 3), com melhorias em UX (Toasts, Modais de confirmação) e segurança (Criptografia e JWT).
