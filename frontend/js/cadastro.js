@@ -1,26 +1,21 @@
 const formulario = document.getElementById("formCadastro");
 
-formulario.addEventListener("submit", async (event) => {
+console.log("Cadastro.js carregado");
 
-    event.preventDefault();
+if (formulario) {
 
-    const botao = formulario.querySelector("button[type='submit']");
+    formulario.addEventListener("submit", async (event) => {
 
-    const nome = document.getElementById("nome").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const senha = document.getElementById("senha").value;
-    const confirmarSenha = document.getElementById("confirmarSenha").value;
+        event.preventDefault();
 
-    botao.disabled = true;
+        console.log("Submit disparou");
 
-    const textoOriginal = botao.innerHTML;
+        const nome = document.getElementById("nome").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const senha = document.getElementById("senha").value;
+        const confirmarSenha = document.getElementById("confirmarSenha").value;
 
-    botao.innerHTML = `
-        <span class="spinner-border spinner-border-sm me-2"></span>
-        Criando conta...
-    `;
-
-    try {
+        console.log({ nome, email, senha, confirmarSenha });
 
         const sucesso = await cadastrarUsuario(
             nome,
@@ -29,15 +24,8 @@ formulario.addEventListener("submit", async (event) => {
             confirmarSenha
         );
 
-        if (sucesso) {
-            formulario.reset();
-        }
+        console.log("Resultado:", sucesso);
 
-    } finally {
+    });
 
-        botao.disabled = false;
-        botao.innerHTML = textoOriginal;
-
-    }
-
-});
+}
