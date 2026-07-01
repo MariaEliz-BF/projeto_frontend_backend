@@ -55,10 +55,17 @@ async def criar_usuario(
     )
     db.add(usuario)
     db.commit()
+    db.refresh(usuario)
+
+    await enviar_email(
+    nome=usuario.nome,
+    email=usuario.email
+)
 
     return {
     "mensagem": "Usuário criado com sucesso"
- }
+}
+
 @router.post("/login", response_model=TokenResponse)
 def login(
     dados: LoginRequest,

@@ -62,7 +62,6 @@ function mostrarToast(mensagem, tipo = "sucesso") {
 }
 
 
-
 // ==========================================
 // MODAL DE CONFIRMAÇÃO
 // ==========================================
@@ -72,7 +71,6 @@ function criarModalConfirmacao() {
     if (document.getElementById("modalConfirmacao")) return;
 
     document.body.insertAdjacentHTML("beforeend", `
-
 <div class="modal fade" id="modalConfirmacao" tabindex="-1" aria-hidden="true">
 
     <div class="modal-dialog modal-dialog-centered">
@@ -85,11 +83,7 @@ function criarModalConfirmacao() {
                     Confirmar ação
                 </h5>
 
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal">
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 
             </div>
 
@@ -127,11 +121,9 @@ function criarModalConfirmacao() {
     </div>
 
 </div>
-
 `);
 
 }
-
 
 
 // ==========================================
@@ -154,9 +146,9 @@ function confirmarAcao(
     const modalElemento = document.getElementById("modalConfirmacao");
 
     const modal = new bootstrap.Modal(modalElemento, {
-    backdrop: "static",
-    keyboard: false
-});
+        backdrop: "static",
+        keyboard: false
+    });
 
     const botaoAntigo = document.getElementById("btnConfirmarModal");
 
@@ -170,6 +162,7 @@ function confirmarAcao(
     );
 
     novoBotao.textContent = textoBotao;
+
     novoBotao.addEventListener("click", async () => {
 
         novoBotao.disabled = true;
@@ -182,12 +175,11 @@ function confirmarAcao(
         try {
 
             btnCancelar.disabled = true;
+
             await callback();
 
-        }
+        } finally {
 
-        finally {
-            
             modal.hide();
 
             novoBotao.disabled = false;
